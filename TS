@@ -1,0 +1,6 @@
+
+CREATE TABLE [Sales]
+( 
+	[id]                 char(18)  NULL 
+)
+go
