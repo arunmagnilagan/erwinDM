@@ -1,0 +1,5 @@
+
+CREATE TABLE Customer
+(
+	name CHAR(18) NULL 
+);
