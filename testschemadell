@@ -16,3 +16,16 @@ CREATE TABLE [Sales]
 	[sade]               char(18)  NULL 
 )
 go
+
+CREATE TABLE [Customer]
+( 
+	[sf]                 char(18)  NULL ,
+	[idnam]              char(18)  NULL 
+)
+go
+
+CREATE TABLE [Sales]
+( 
+	[sade]               char(10)  NULL 
+)
+go
