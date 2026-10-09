@@ -4,3 +4,9 @@ CREATE TABLE [Sales]
 	[id]                 char(18)  NULL 
 )
 go
+
+CREATE TABLE [Sales]
+( 
+	[id]                 char(28)  NULL 
+)
+go
