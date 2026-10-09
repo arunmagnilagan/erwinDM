@@ -4,3 +4,15 @@ CREATE TABLE [Customer]
 	[sf]                 char(18)  NULL 
 )
 go
+
+CREATE TABLE [Customer]
+( 
+	[sf]                 char(18)  NULL 
+)
+go
+
+CREATE TABLE [Sales]
+( 
+	[sade]               char(18)  NULL 
+)
+go
