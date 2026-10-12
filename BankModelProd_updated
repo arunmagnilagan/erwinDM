@@ -1,0 +1,8 @@
+
+ALTER TABLE [CreditCards] 
+   ALTER COLUMN [Status] nvarchar(40) NOT NULL
+go
+
+ALTER TABLE [Cheques] 
+   ALTER COLUMN [ChequeNumber] nvarchar(40) NOT NULL
+go
