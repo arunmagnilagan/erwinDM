@@ -1,0 +1,469 @@
+
+CREATE TABLE [Accounts]
+( 
+	[AccountID]          int  NOT NULL ,
+	[CustomerID]         int  NOT NULL ,
+	[BranchID]           int  NOT NULL ,
+	[AccountType]        nvarchar(50)  NOT NULL ,
+	[Balance]            decimal(18,2)  NOT NULL ,
+	[CreatedDate]        datetime  NOT NULL ,
+	[Status]             nvarchar(20)  NOT NULL 
+)
+go
+
+CREATE TABLE [AccountTransactions]
+( 
+	[TransactionID]      int  NOT NULL ,
+	[AccountID]          int  NOT NULL ,
+	[TransactionDate]    datetime  NOT NULL ,
+	[Amount]             decimal(18,2)  NOT NULL ,
+	[TransactionType]    nvarchar(20)  NOT NULL ,
+	[Description]        nvarchar(255)  NULL ,
+	[EmployeeID]         int  NULL 
+)
+go
+
+CREATE TABLE [ATMs]
+( 
+	[ATMID]              int  NOT NULL ,
+	[BranchID]           int  NOT NULL ,
+	[Location]           nvarchar(100)  NOT NULL ,
+	[Status]             nvarchar(20)  NOT NULL ,
+	[InstallationDate]   DATE  NOT NULL 
+)
+go
+
+CREATE TABLE [ATMTransactions]
+( 
+	[ATMTransactionID]   int  NOT NULL ,
+	[ATMID]              int  NOT NULL ,
+	[AccountID]          int  NOT NULL ,
+	[TransactionDate]    datetime  NOT NULL ,
+	[TransactionType]    nvarchar(20)  NOT NULL ,
+	[Amount]             decimal(18,2)  NOT NULL 
+)
+go
+
+CREATE TABLE [Beneficiaries]
+( 
+	[BeneficiaryID]      int  NOT NULL ,
+	[AccountID]          int  NOT NULL ,
+	[Name]               nvarchar(150)  NOT NULL ,
+	[Relationship]       nvarchar(50)  NOT NULL 
+)
+go
+
+CREATE TABLE [Branches]
+( 
+	[BranchID]           int  NOT NULL ,
+	[BranchName]         nvarchar(100)  NOT NULL ,
+	[Address]            nvarchar(255)  NOT NULL ,
+	[City]               nvarchar(100)  NOT NULL ,
+	[State]              nvarchar(50)  NOT NULL ,
+	[ZipCode]            nvarchar(20)  NOT NULL ,
+	[Phone]              nvarchar(20)  NULL 
+)
+go
+
+CREATE TABLE [Cheques]
+( 
+	[ChequeID]           int  NOT NULL ,
+	[AccountID]          int  NOT NULL ,
+	[ChequeNumber]       nvarchar(40)  NOT NULL ,
+	[IssueDate]          DATE  NOT NULL ,
+	[Payee]              nvarchar(100)  NOT NULL ,
+	[Amount]             decimal(18,2)  NOT NULL ,
+	[Status]             nvarchar(20)  NOT NULL 
+)
+go
+
+CREATE TABLE [CreditCards]
+( 
+	[CardID]             int  NOT NULL ,
+	[CustomerID]         int  NOT NULL ,
+	[BranchID]           int  NOT NULL ,
+	[CardNumber]         nvarchar(20)  NOT NULL ,
+	[CardType]           nvarchar(20)  NOT NULL ,
+	[IssuedDate]         DATE  NOT NULL ,
+	[ExpiryDate]         DATE  NOT NULL ,
+	[Status]             nvarchar(40)  NOT NULL ,
+	[CreditLimit]        decimal(18,2)  NOT NULL 
+)
+go
+
+CREATE TABLE [CreditCardTransactions]
+( 
+	[CCTransactionID]    int  NOT NULL ,
+	[CardID]             int  NOT NULL ,
+	[TransactionDate]    datetime  NOT NULL ,
+	[Amount]             decimal(18,2)  NOT NULL ,
+	[Merchant]           nvarchar(100)  NOT NULL ,
+	[Description]        nvarchar(255)  NULL 
+)
+go
+
+CREATE TABLE [Customers]
+( 
+	[CustomerID]         int  NOT NULL ,
+	[FirstName]          nvarchar(100)  NOT NULL ,
+	[LastName]           nvarchar(100)  NOT NULL ,
+	[Email]              nvarchar(255)  NOT NULL ,
+	[Phone]              nvarchar(20)  NULL ,
+	[Address]            nvarchar(255)  NOT NULL ,
+	[City]               nvarchar(100)  NOT NULL ,
+	[State]              nvarchar(50)  NOT NULL ,
+	[ZipCode]            nvarchar(20)  NOT NULL ,
+	[DateOfBirth]        DATE  NOT NULL ,
+	[RegistrationDate]   datetime  NOT NULL 
+)
+go
+
+CREATE TABLE [Employees]
+( 
+	[EmployeeID]         int  NOT NULL ,
+	[BranchID]           int  NOT NULL ,
+	[FirstName]          nvarchar(100)  NOT NULL ,
+	[LastName]           nvarchar(100)  NOT NULL ,
+	[Email]              nvarchar(255)  NOT NULL ,
+	[Phone]              nvarchar(20)  NULL ,
+	[HireDate]           DATE  NOT NULL ,
+	[Position]           nvarchar(50)  NOT NULL 
+)
+go
+
+CREATE TABLE [FixedDeposits]
+( 
+	[FDID]               int  NOT NULL ,
+	[CustomerID]         int  NOT NULL ,
+	[BranchID]           int  NOT NULL ,
+	[Amount]             decimal(18,2)  NOT NULL ,
+	[StartDate]          DATE  NOT NULL ,
+	[MaturityDate]       DATE  NOT NULL ,
+	[InterestRate]       decimal(5,2)  NOT NULL ,
+	[Status]             nvarchar(20)  NOT NULL 
+)
+go
+
+CREATE TABLE [InsurancePolicies]
+( 
+	[PolicyID]           int  NOT NULL ,
+	[CustomerID]         int  NOT NULL ,
+	[BranchID]           int  NOT NULL ,
+	[PolicyType]         nvarchar(50)  NOT NULL ,
+	[StartDate]          DATE  NOT NULL ,
+	[EndDate]            DATE  NULL ,
+	[Premium]            decimal(18,2)  NOT NULL ,
+	[Status]             nvarchar(20)  NOT NULL 
+)
+go
+
+CREATE TABLE [LoanPayments]
+( 
+	[PaymentID]          int  NOT NULL ,
+	[LoanID]             int  NOT NULL ,
+	[PaymentDate]        datetime  NOT NULL ,
+	[Amount]             decimal(18,2)  NOT NULL ,
+	[EmployeeID]         int  NULL 
+)
+go
+
+CREATE TABLE [Loans]
+( 
+	[LoanID]             int  NOT NULL ,
+	[CustomerID]         int  NOT NULL ,
+	[BranchID]           int  NOT NULL ,
+	[LoanType]           nvarchar(50)  NOT NULL ,
+	[PrincipalAmount]    decimal(18,2)  NOT NULL ,
+	[InterestRate]       decimal(5,2)  NOT NULL ,
+	[StartDate]          DATE  NOT NULL ,
+	[EndDate]            DATE  NULL ,
+	[Status]             nvarchar(20)  NOT NULL 
+)
+go
+
+CREATE TABLE [Notifications]
+( 
+	[NotificationID]     int  NOT NULL ,
+	[CustomerID]         int  NOT NULL ,
+	[NotificationType]   nvarchar(50)  NOT NULL ,
+	[Message]            nvarchar(255)  NOT NULL ,
+	[CreatedDate]        datetime  NOT NULL ,
+	[Status]             nvarchar(20)  NOT NULL 
+)
+go
+
+CREATE TABLE [PolicyPayments]
+( 
+	[PaymentID]          int  NOT NULL ,
+	[PolicyID]           int  NOT NULL ,
+	[PaymentDate]        datetime  NOT NULL ,
+	[Amount]             decimal(18,2)  NOT NULL ,
+	[EmployeeID]         int  NULL 
+)
+go
+
+CREATE TABLE [RecurringDeposits]
+( 
+	[RDID]               int  NOT NULL ,
+	[CustomerID]         int  NOT NULL ,
+	[BranchID]           int  NOT NULL ,
+	[MonthlyAmount]      decimal(18,2)  NOT NULL ,
+	[StartDate]          DATE  NOT NULL ,
+	[MaturityDate]       DATE  NOT NULL ,
+	[InterestRate]       decimal(5,2)  NOT NULL ,
+	[Status]             nvarchar(20)  NOT NULL 
+)
+go
+
+CREATE TABLE [SafeDepositBoxes]
+( 
+	[BoxID]              int  NOT NULL ,
+	[CustomerID]         int  NOT NULL ,
+	[BranchID]           int  NOT NULL ,
+	[BoxNumber]          nvarchar(20)  NOT NULL ,
+	[RentedDate]         DATE  NOT NULL ,
+	[ExpiryDate]         DATE  NOT NULL ,
+	[Status]             nvarchar(20)  NOT NULL 
+)
+go
+
+CREATE TABLE [UserLogins]
+( 
+	[LoginID]            int  NOT NULL ,
+	[CustomerID]         int  NOT NULL ,
+	[Username]           nvarchar(100)  NOT NULL ,
+	[PasswordHash]       nvarchar(255)  NOT NULL ,
+	[LastLogin]          datetime  NULL ,
+	[Status]             nvarchar(20)  NOT NULL 
+)
+go
+
+ALTER TABLE [Accounts]
+	ADD CONSTRAINT [XPKAccounts] PRIMARY KEY  NONCLUSTERED ([AccountID] ASC)
+go
+
+ALTER TABLE [AccountTransactions]
+	ADD CONSTRAINT [XPKAccountTransactions] PRIMARY KEY  NONCLUSTERED ([TransactionID] ASC)
+go
+
+ALTER TABLE [ATMs]
+	ADD CONSTRAINT [XPKATMs] PRIMARY KEY  NONCLUSTERED ([ATMID] ASC)
+go
+
+ALTER TABLE [ATMTransactions]
+	ADD CONSTRAINT [XPKATMTransactions] PRIMARY KEY  NONCLUSTERED ([ATMTransactionID] ASC)
+go
+
+ALTER TABLE [Beneficiaries]
+	ADD CONSTRAINT [XPKBeneficiaries] PRIMARY KEY  NONCLUSTERED ([BeneficiaryID] ASC)
+go
+
+ALTER TABLE [Branches]
+	ADD CONSTRAINT [XPKBranches] PRIMARY KEY  NONCLUSTERED ([BranchID] ASC)
+go
+
+ALTER TABLE [Cheques]
+	ADD CONSTRAINT [XPKCheques] PRIMARY KEY  NONCLUSTERED ([ChequeID] ASC)
+go
+
+ALTER TABLE [CreditCards]
+	ADD CONSTRAINT [XPKCreditCards] PRIMARY KEY  NONCLUSTERED ([CardID] ASC)
+go
+
+ALTER TABLE [CreditCards]
+	ADD CONSTRAINT [XAK1CreditCards] UNIQUE ([CardNumber]  ASC)
+go
+
+ALTER TABLE [CreditCardTransactions]
+	ADD CONSTRAINT [XPKCreditCardTransactions] PRIMARY KEY  NONCLUSTERED ([CCTransactionID] ASC)
+go
+
+ALTER TABLE [Customers]
+	ADD CONSTRAINT [XPKCustomers] PRIMARY KEY  NONCLUSTERED ([CustomerID] ASC)
+go
+
+ALTER TABLE [Customers]
+	ADD CONSTRAINT [XAK1Customers] UNIQUE ([Email]  ASC)
+go
+
+ALTER TABLE [Employees]
+	ADD CONSTRAINT [XPKEmployees] PRIMARY KEY  NONCLUSTERED ([EmployeeID] ASC)
+go
+
+ALTER TABLE [Employees]
+	ADD CONSTRAINT [XAK1Employees] UNIQUE ([Email]  ASC)
+go
+
+ALTER TABLE [FixedDeposits]
+	ADD CONSTRAINT [XPKFixedDeposits] PRIMARY KEY  NONCLUSTERED ([FDID] ASC)
+go
+
+ALTER TABLE [InsurancePolicies]
+	ADD CONSTRAINT [XPKInsurancePolicies] PRIMARY KEY  NONCLUSTERED ([PolicyID] ASC)
+go
+
+ALTER TABLE [LoanPayments]
+	ADD CONSTRAINT [XPKLoanPayments] PRIMARY KEY  NONCLUSTERED ([PaymentID] ASC)
+go
+
+ALTER TABLE [Loans]
+	ADD CONSTRAINT [XPKLoans] PRIMARY KEY  NONCLUSTERED ([LoanID] ASC)
+go
+
+ALTER TABLE [Notifications]
+	ADD CONSTRAINT [XPKNotifications] PRIMARY KEY  NONCLUSTERED ([NotificationID] ASC)
+go
+
+ALTER TABLE [PolicyPayments]
+	ADD CONSTRAINT [XPKPolicyPayments] PRIMARY KEY  NONCLUSTERED ([PaymentID] ASC)
+go
+
+ALTER TABLE [RecurringDeposits]
+	ADD CONSTRAINT [XPKRecurringDeposits] PRIMARY KEY  NONCLUSTERED ([RDID] ASC)
+go
+
+ALTER TABLE [SafeDepositBoxes]
+	ADD CONSTRAINT [XPKSafeDepositBoxes] PRIMARY KEY  NONCLUSTERED ([BoxID] ASC)
+go
+
+ALTER TABLE [UserLogins]
+	ADD CONSTRAINT [XPKUserLogins] PRIMARY KEY  NONCLUSTERED ([LoginID] ASC)
+go
+
+ALTER TABLE [UserLogins]
+	ADD CONSTRAINT [XAK1UserLogins] UNIQUE ([Username]  ASC)
+go
+
+
+ALTER TABLE [Accounts]
+	ADD CONSTRAINT [R/2] FOREIGN KEY ([CustomerID]) REFERENCES [Customers]([CustomerID])
+go
+
+ALTER TABLE [Accounts]
+	ADD CONSTRAINT [R/3] FOREIGN KEY ([BranchID]) REFERENCES [Branches]([BranchID])
+go
+
+
+ALTER TABLE [AccountTransactions]
+	ADD CONSTRAINT [R/4] FOREIGN KEY ([AccountID]) REFERENCES [Accounts]([AccountID])
+go
+
+ALTER TABLE [AccountTransactions]
+	ADD CONSTRAINT [R/5] FOREIGN KEY ([EmployeeID]) REFERENCES [Employees]([EmployeeID])
+go
+
+
+ALTER TABLE [ATMs]
+	ADD CONSTRAINT [R/19] FOREIGN KEY ([BranchID]) REFERENCES [Branches]([BranchID])
+go
+
+
+ALTER TABLE [ATMTransactions]
+	ADD CONSTRAINT [R/20] FOREIGN KEY ([ATMID]) REFERENCES [ATMs]([ATMID])
+go
+
+ALTER TABLE [ATMTransactions]
+	ADD CONSTRAINT [R/21] FOREIGN KEY ([AccountID]) REFERENCES [Accounts]([AccountID])
+go
+
+
+ALTER TABLE [Beneficiaries]
+	ADD CONSTRAINT [R/22] FOREIGN KEY ([AccountID]) REFERENCES [Accounts]([AccountID])
+go
+
+
+ALTER TABLE [Cheques]
+	ADD CONSTRAINT [R/23] FOREIGN KEY ([AccountID]) REFERENCES [Accounts]([AccountID])
+go
+
+
+ALTER TABLE [CreditCards]
+	ADD CONSTRAINT [R/10] FOREIGN KEY ([CustomerID]) REFERENCES [Customers]([CustomerID])
+go
+
+ALTER TABLE [CreditCards]
+	ADD CONSTRAINT [R/11] FOREIGN KEY ([BranchID]) REFERENCES [Branches]([BranchID])
+go
+
+
+ALTER TABLE [CreditCardTransactions]
+	ADD CONSTRAINT [R/12] FOREIGN KEY ([CardID]) REFERENCES [CreditCards]([CardID])
+go
+
+
+ALTER TABLE [Employees]
+	ADD CONSTRAINT [R/1] FOREIGN KEY ([BranchID]) REFERENCES [Branches]([BranchID])
+go
+
+
+ALTER TABLE [FixedDeposits]
+	ADD CONSTRAINT [R/24] FOREIGN KEY ([CustomerID]) REFERENCES [Customers]([CustomerID])
+go
+
+ALTER TABLE [FixedDeposits]
+	ADD CONSTRAINT [R/25] FOREIGN KEY ([BranchID]) REFERENCES [Branches]([BranchID])
+go
+
+
+ALTER TABLE [InsurancePolicies]
+	ADD CONSTRAINT [R/15] FOREIGN KEY ([CustomerID]) REFERENCES [Customers]([CustomerID])
+go
+
+ALTER TABLE [InsurancePolicies]
+	ADD CONSTRAINT [R/16] FOREIGN KEY ([BranchID]) REFERENCES [Branches]([BranchID])
+go
+
+
+ALTER TABLE [LoanPayments]
+	ADD CONSTRAINT [R/8] FOREIGN KEY ([LoanID]) REFERENCES [Loans]([LoanID])
+go
+
+ALTER TABLE [LoanPayments]
+	ADD CONSTRAINT [R/9] FOREIGN KEY ([EmployeeID]) REFERENCES [Employees]([EmployeeID])
+go
+
+
+ALTER TABLE [Loans]
+	ADD CONSTRAINT [R/6] FOREIGN KEY ([CustomerID]) REFERENCES [Customers]([CustomerID])
+go
+
+ALTER TABLE [Loans]
+	ADD CONSTRAINT [R/7] FOREIGN KEY ([BranchID]) REFERENCES [Branches]([BranchID])
+go
+
+
+ALTER TABLE [Notifications]
+	ADD CONSTRAINT [R/28] FOREIGN KEY ([CustomerID]) REFERENCES [Customers]([CustomerID])
+go
+
+
+ALTER TABLE [PolicyPayments]
+	ADD CONSTRAINT [R/17] FOREIGN KEY ([PolicyID]) REFERENCES [InsurancePolicies]([PolicyID])
+go
+
+ALTER TABLE [PolicyPayments]
+	ADD CONSTRAINT [R/18] FOREIGN KEY ([EmployeeID]) REFERENCES [Employees]([EmployeeID])
+go
+
+
+ALTER TABLE [RecurringDeposits]
+	ADD CONSTRAINT [R/26] FOREIGN KEY ([CustomerID]) REFERENCES [Customers]([CustomerID])
+go
+
+ALTER TABLE [RecurringDeposits]
+	ADD CONSTRAINT [R/27] FOREIGN KEY ([BranchID]) REFERENCES [Branches]([BranchID])
+go
+
+
+ALTER TABLE [SafeDepositBoxes]
+	ADD CONSTRAINT [R/13] FOREIGN KEY ([CustomerID]) REFERENCES [Customers]([CustomerID])
+go
+
+ALTER TABLE [SafeDepositBoxes]
+	ADD CONSTRAINT [R/14] FOREIGN KEY ([BranchID]) REFERENCES [Branches]([BranchID])
+go
+
+
+ALTER TABLE [UserLogins]
+	ADD CONSTRAINT [R/29] FOREIGN KEY ([CustomerID]) REFERENCES [Customers]([CustomerID])
+go
