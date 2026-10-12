@@ -467,3 +467,15 @@ go
 ALTER TABLE [UserLogins]
 	ADD CONSTRAINT [R/29] FOREIGN KEY ([CustomerID]) REFERENCES [Customers]([CustomerID])
 go
+
+ALTER TABLE [CreditCards] 
+   ALTER COLUMN [Status] nvarchar(40) NOT NULL
+go
+
+ALTER TABLE [Beneficiaries] 
+   ALTER COLUMN [Name] nvarchar(150) NOT NULL
+go
+
+ALTER TABLE [Cheques] 
+   ALTER COLUMN [ChequeNumber] nvarchar(40) NOT NULL
+go
