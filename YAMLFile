@@ -1,0 +1,514 @@
+version : 2
+sources:
+  - name: BankModelSample_Temp
+    database: Dummy_DB
+    schema: Temp
+    tables:
+      - name: Branches
+        columns:
+          - name: BranchID
+            data_type: int
+            tests:
+              - unique
+              - not_null
+          - name: BranchName
+            data_type: nvarchar
+          - name: Address
+            data_type: nvarchar
+          - name: City
+            data_type: nvarchar
+          - name: State
+            data_type: nvarchar
+          - name: ZipCode
+            data_type: nvarchar
+          - name: Phone
+            data_type: nvarchar
+      - name: Employees
+        columns:
+          - name: EmployeeID
+            data_type: int
+            tests:
+              - unique
+              - not_null
+          - name: BranchID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('Branches')
+                    field: BranchID
+          - name: FirstName
+            data_type: nvarchar
+          - name: LastName
+            data_type: nvarchar
+          - name: Email
+            data_type: nvarchar
+          - name: Phone
+            data_type: nvarchar
+          - name: HireDate
+            data_type: DATE
+          - name: Position
+            data_type: nvarchar
+      - name: Customers
+        columns:
+          - name: CustomerID
+            data_type: int
+            tests:
+              - unique
+              - not_null
+          - name: FirstName
+            data_type: nvarchar
+          - name: LastName
+            data_type: nvarchar
+          - name: Email
+            data_type: nvarchar
+          - name: Phone
+            data_type: nvarchar
+          - name: Address
+            data_type: nvarchar
+          - name: City
+            data_type: nvarchar
+          - name: State
+            data_type: nvarchar
+          - name: ZipCode
+            data_type: nvarchar
+          - name: DateOfBirth
+            data_type: DATE
+          - name: RegistrationDate
+            data_type: datetime
+      - name: Accounts
+        columns:
+          - name: AccountID
+            data_type: int
+            tests:
+              - unique
+              - not_null
+          - name: CustomerID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('Customers')
+                    field: CustomerID
+          - name: BranchID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('Branches')
+                    field: BranchID
+          - name: AccountType
+            data_type: nvarchar
+          - name: Balance
+            data_type: decimal
+          - name: CreatedDate
+            data_type: datetime
+          - name: Status
+            data_type: nvarchar
+      - name: AccountTransactions
+        columns:
+          - name: TransactionID
+            data_type: int
+            tests:
+              - unique
+              - not_null
+          - name: AccountID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('Accounts')
+                    field: AccountID
+          - name: TransactionDate
+            data_type: datetime
+          - name: Amount
+            data_type: decimal
+          - name: TransactionType
+            data_type: nvarchar
+          - name: Description
+            data_type: nvarchar
+          - name: EmployeeID
+            data_type: int
+      - name: Loans
+        columns:
+          - name: LoanID
+            data_type: int
+            tests:
+              - unique
+              - not_null
+          - name: CustomerID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('Customers')
+                    field: CustomerID
+          - name: BranchID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('Branches')
+                    field: BranchID
+          - name: LoanType
+            data_type: nvarchar
+          - name: PrincipalAmount
+            data_type: decimal
+          - name: InterestRate
+            data_type: decimal
+          - name: StartDate
+            data_type: DATE
+          - name: EndDate
+            data_type: DATE
+          - name: Status
+            data_type: nvarchar
+      - name: LoanPayments
+        columns:
+          - name: PaymentID
+            data_type: int
+            tests:
+              - unique
+              - not_null
+          - name: LoanID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('Loans')
+                    field: LoanID
+          - name: PaymentDate
+            data_type: datetime
+          - name: Amount
+            data_type: decimal
+          - name: EmployeeID
+            data_type: int
+      - name: CreditCards
+        columns:
+          - name: CardID
+            data_type: int
+            tests:
+              - unique
+              - not_null
+          - name: CustomerID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('Customers')
+                    field: CustomerID
+          - name: BranchID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('Branches')
+                    field: BranchID
+          - name: CardNumber
+            data_type: nvarchar
+          - name: CardType
+            data_type: nvarchar
+          - name: IssuedDate
+            data_type: DATE
+          - name: ExpiryDate
+            data_type: DATE
+          - name: Status
+            data_type: nvarchar
+          - name: CreditLimit
+            data_type: decimal
+      - name: CreditCardTransactions
+        columns:
+          - name: CCTransactionID
+            data_type: int
+            tests:
+              - unique
+              - not_null
+          - name: CardID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('CreditCards')
+                    field: CardID
+          - name: TransactionDate
+            data_type: datetime
+          - name: Amount
+            data_type: decimal
+          - name: Merchant
+            data_type: nvarchar
+          - name: Description
+            data_type: nvarchar
+      - name: SafeDepositBoxes
+        columns:
+          - name: BoxID
+            data_type: int
+            tests:
+              - unique
+              - not_null
+          - name: CustomerID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('Customers')
+                    field: CustomerID
+          - name: BranchID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('Branches')
+                    field: BranchID
+          - name: BoxNumber
+            data_type: nvarchar
+          - name: RentedDate
+            data_type: DATE
+          - name: ExpiryDate
+            data_type: DATE
+          - name: Status
+            data_type: nvarchar
+      - name: InsurancePolicies
+        columns:
+          - name: PolicyID
+            data_type: int
+            tests:
+              - unique
+              - not_null
+          - name: CustomerID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('Customers')
+                    field: CustomerID
+          - name: BranchID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('Branches')
+                    field: BranchID
+          - name: PolicyType
+            data_type: nvarchar
+          - name: StartDate
+            data_type: DATE
+          - name: EndDate
+            data_type: DATE
+          - name: Premium
+            data_type: decimal
+          - name: Status
+            data_type: nvarchar
+      - name: PolicyPayments
+        columns:
+          - name: PaymentID
+            data_type: int
+            tests:
+              - unique
+              - not_null
+          - name: PolicyID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('InsurancePolicies')
+                    field: PolicyID
+          - name: PaymentDate
+            data_type: datetime
+          - name: Amount
+            data_type: decimal
+          - name: EmployeeID
+            data_type: int
+      - name: ATMs
+        columns:
+          - name: ATMID
+            data_type: int
+            tests:
+              - unique
+              - not_null
+          - name: BranchID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('Branches')
+                    field: BranchID
+          - name: Location
+            data_type: nvarchar
+          - name: Status
+            data_type: nvarchar
+          - name: InstallationDate
+            data_type: DATE
+      - name: ATMTransactions
+        columns:
+          - name: ATMTransactionID
+            data_type: int
+            tests:
+              - unique
+              - not_null
+          - name: ATMID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('ATMs')
+                    field: ATMID
+          - name: AccountID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('Accounts')
+                    field: AccountID
+          - name: TransactionDate
+            data_type: datetime
+          - name: TransactionType
+            data_type: nvarchar
+          - name: Amount
+            data_type: decimal
+      - name: Beneficiaries
+        columns:
+          - name: BeneficiaryID
+            data_type: int
+            tests:
+              - unique
+              - not_null
+          - name: AccountID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('Accounts')
+                    field: AccountID
+          - name: Name
+            data_type: nvarchar
+          - name: Relationship
+            data_type: nvarchar
+      - name: Cheques
+        columns:
+          - name: ChequeID
+            data_type: int
+            tests:
+              - unique
+              - not_null
+          - name: AccountID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('Accounts')
+                    field: AccountID
+          - name: ChequeNumber
+            data_type: nvarchar
+          - name: IssueDate
+            data_type: DATE
+          - name: Payee
+            data_type: nvarchar
+          - name: Amount
+            data_type: decimal
+          - name: Status
+            data_type: nvarchar
+      - name: FixedDeposits
+        columns:
+          - name: FDID
+            data_type: int
+            tests:
+              - unique
+              - not_null
+          - name: CustomerID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('Customers')
+                    field: CustomerID
+          - name: BranchID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('Branches')
+                    field: BranchID
+          - name: Amount
+            data_type: decimal
+          - name: StartDate
+            data_type: DATE
+          - name: MaturityDate
+            data_type: DATE
+          - name: InterestRate
+            data_type: decimal
+          - name: Status
+            data_type: nvarchar
+      - name: RecurringDeposits
+        columns:
+          - name: RDID
+            data_type: int
+            tests:
+              - unique
+              - not_null
+          - name: CustomerID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('Customers')
+                    field: CustomerID
+          - name: BranchID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('Branches')
+                    field: BranchID
+          - name: MonthlyAmount
+            data_type: decimal
+          - name: StartDate
+            data_type: DATE
+          - name: MaturityDate
+            data_type: DATE
+          - name: InterestRate
+            data_type: decimal
+          - name: Status
+            data_type: nvarchar
+      - name: Notifications
+        columns:
+          - name: NotificationID
+            data_type: int
+            tests:
+              - unique
+              - not_null
+          - name: CustomerID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('Customers')
+                    field: CustomerID
+          - name: NotificationType
+            data_type: nvarchar
+          - name: Message
+            data_type: nvarchar
+          - name: CreatedDate
+            data_type: datetime
+          - name: Status
+            data_type: nvarchar
+      - name: UserLogins
+        columns:
+          - name: LoginID
+            data_type: int
+            tests:
+              - unique
+              - not_null
+          - name: CustomerID
+            data_type: int
+            tests:
+              - not_null
+              - relationships:
+                    to: ref('Customers')
+                    field: CustomerID
+          - name: Username
+            data_type: nvarchar
+          - name: PasswordHash
+            data_type: nvarchar
+          - name: LastLogin
+            data_type: datetime
+          - name: Status
+            data_type: nvarchar
