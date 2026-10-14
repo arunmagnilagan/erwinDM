@@ -471,3 +471,83 @@ go
 ALTER TABLE [CreditCardTransactions]
 ADD [id]  char(18)  NULL
 go
+
+ALTER TABLE [Cheques]
+DROP CONSTRAINT [R/23]
+go
+
+ALTER TABLE [CreditCardTransactions]
+DROP CONSTRAINT [R/12]
+go
+
+ALTER TABLE [Cheques]
+DROP CONSTRAINT [XPKCheques]
+go
+
+ALTER TABLE [CreditCardTransactions]
+DROP CONSTRAINT [XPKCreditCardTransactions]
+go
+
+execute sp_rename '[Cheques]', 'ChequesAAEB3135001'
+go
+
+execute sp_rename '[CreditCardTransactions]', 'CreditCardTransactionsAAEB3135000'
+go
+
+CREATE TABLE [Cheques]
+( 
+	[ChequeID]           int  NOT NULL ,
+	[AccountID]          int  NOT NULL ,
+	[ChequeNumber]       nvarchar(20)  NOT NULL ,
+	[IssueDate]          DATE  NOT NULL ,
+	[Payee]              nvarchar(100)  NOT NULL ,
+	[Amount]             decimal(18,2)  NOT NULL ,
+	[Status]             nvarchar(20)  NOT NULL 
+)
+go
+
+CREATE TABLE [CreditCardTransactions]
+( 
+	[CCTransactionID]    int  NOT NULL ,
+	[CardID]             int  NOT NULL ,
+	[TransactionDate]    datetime  NOT NULL ,
+	[Amount]             decimal(18,2)  NOT NULL ,
+	[Merchant]           nvarchar(100)  NOT NULL ,
+	[Description]        nvarchar(155)  NULL ,
+	[id]                 char(18)  NULL 
+)
+go
+
+ALTER TABLE [Cheques]
+ADD CONSTRAINT [XPKCheques] PRIMARY KEY  NONCLUSTERED ([ChequeID] ASC)
+go
+
+
+INSERT INTO [Cheques] ([ChequeID], [AccountID], [ChequeNumber], [IssueDate], [Payee], [Amount], [Status]) SELECT [ChequeID], [AccountID], [ChequeNumber], [IssueDate], [Payee], CONVERT(decimal(18,2),Amount), [Status] FROM ChequesAAEB3135001
+
+go
+
+ALTER TABLE [CreditCardTransactions]
+ADD CONSTRAINT [XPKCreditCardTransactions] PRIMARY KEY  NONCLUSTERED ([CCTransactionID] ASC)
+go
+
+
+INSERT INTO [CreditCardTransactions] ([CCTransactionID], [CardID], [TransactionDate], [Amount], [Merchant], [Description]) SELECT [CCTransactionID], [CardID], [TransactionDate], CONVERT(decimal(18,2),Amount), [Merchant], [Description] FROM CreditCardTransactionsAAEB3135000
+
+go
+
+ALTER TABLE [Cheques]
+	ADD CONSTRAINT [R/23] FOREIGN KEY ([AccountID]) REFERENCES [Accounts]([AccountID])
+go
+
+ALTER TABLE [CreditCardTransactions]
+	ADD CONSTRAINT [R/12] FOREIGN KEY ([CardID]) REFERENCES [CreditCards]([CardID])
+go
+
+
+DROP TABLE IF EXISTS ChequesAAEB3135001
+go
+
+
+DROP TABLE IF EXISTS CreditCardTransactionsAAEB3135000
+go
