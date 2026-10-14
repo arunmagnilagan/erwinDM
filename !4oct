@@ -467,3 +467,7 @@ go
 ALTER TABLE [UserLogins]
 	ADD CONSTRAINT [R/29] FOREIGN KEY ([CustomerID]) REFERENCES [Customers]([CustomerID])
 go
+
+ALTER TABLE [CreditCardTransactions]
+ADD [id]  char(18)  NULL
+go
