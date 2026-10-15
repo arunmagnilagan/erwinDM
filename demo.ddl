@@ -1877,3 +1877,7 @@ END
 go
 
 
+
+ALTER TABLE [dbo].[Enrollments] 
+   ALTER COLUMN [Status] nvarchar(30) NOT NULL
+go
