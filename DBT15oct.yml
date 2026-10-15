@@ -1,0 +1,246 @@
+version : 1
+models:
+  - name: Attendance
+    columns:
+      - name: AttendanceID
+        data_type: int
+        tests:
+          - unique
+          - not_null
+      - name: EnrollmentID
+        data_type: int
+        tests:
+          - not_null
+          - relationships:
+                to: ref('Enrollments')
+                field: EnrollmentID
+      - name: AttendanceDate
+        data_type: date
+      - name: Status
+        data_type: nvarchar
+      - name: Remarks
+        data_type: nvarchar
+  - name: Classrooms
+    columns:
+      - name: ClassroomID
+        data_type: int
+        tests:
+          - unique
+          - not_null
+      - name: Building
+        data_type: nvarchar
+      - name: RoomNumber
+        data_type: nvarchar
+      - name: Capacity
+        data_type: smallint
+  - name: Courses
+    columns:
+      - name: CourseID
+        data_type: int
+        tests:
+          - unique
+          - not_null
+      - name: DepartmentID
+        data_type: int
+        tests:
+          - not_null
+          - relationships:
+                to: ref('Departments')
+                field: DepartmentID
+      - name: CourseCode
+        data_type: nvarchar
+      - name: CourseName
+        data_type: nvarchar
+      - name: Credits
+        data_type: tinyint
+      - name: Description
+        data_type: nvarchar
+  - name: CourseSections
+    columns:
+      - name: SectionID
+        data_type: int
+        tests:
+          - unique
+          - not_null
+      - name: CourseID
+        data_type: int
+        tests:
+          - not_null
+          - relationships:
+                to: ref('Courses')
+                field: CourseID
+      - name: SemesterID
+        data_type: int
+        tests:
+          - not_null
+          - relationships:
+                to: ref('Semesters')
+                field: SemesterID
+      - name: InstructorID
+        data_type: int
+        tests:
+          - not_null
+          - relationships:
+                to: ref('Instructors')
+                field: InstructorID
+      - name: ClassroomID
+        data_type: int
+      - name: SectionCode
+        data_type: nvarchar
+      - name: DayOfWeek
+        data_type: nvarchar
+      - name: StartTime
+        data_type: time
+      - name: EndTime
+        data_type: time
+      - name: MaxStudents
+        data_type: smallint
+  - name: Customers
+    columns:
+      - name: customersALES
+        data_type: nchar
+  - name: Departments
+    columns:
+      - name: DepartmentID
+        data_type: int
+        tests:
+          - unique
+          - not_null
+      - name: DepartmentName
+        data_type: nvarchar
+      - name: Building
+        data_type: nvarchar
+      - name: Phone
+        data_type: nvarchar
+  - name: Enrollments
+    columns:
+      - name: EnrollmentID
+        data_type: int
+        tests:
+          - unique
+          - not_null
+      - name: StudentID
+        data_type: int
+        tests:
+          - not_null
+          - relationships:
+                to: ref('Students')
+                field: StudentID
+      - name: SectionID
+        data_type: int
+        tests:
+          - not_null
+          - relationships:
+                to: ref('CourseSections')
+                field: SectionID
+      - name: EnrollmentDate
+        data_type: date
+      - name: Grade
+        data_type: nvarchar
+      - name: GradePoints
+        data_type: decimal
+      - name: Status
+        data_type: nvarchar
+  - name: Instructors
+    columns:
+      - name: InstructorID
+        data_type: int
+        tests:
+          - unique
+          - not_null
+      - name: DepartmentID
+        data_type: int
+        tests:
+          - not_null
+          - relationships:
+                to: ref('Departments')
+                field: DepartmentID
+      - name: FirstName
+        data_type: nvarchar
+      - name: LastName
+        data_type: nvarchar
+      - name: Email
+        data_type: nvarchar
+      - name: Phone
+        data_type: nvarchar
+      - name: HireDate
+        data_type: date
+      - name: Title
+        data_type: nvarchar
+  - name: Programs
+    columns:
+      - name: ProgramID
+        data_type: int
+        tests:
+          - unique
+          - not_null
+      - name: DepartmentID
+        data_type: int
+        tests:
+          - not_null
+          - relationships:
+                to: ref('Departments')
+                field: DepartmentID
+      - name: ProgramName
+        data_type: nvarchar
+      - name: DegreeLevel
+        data_type: nvarchar
+      - name: DurationYears
+        data_type: tinyint
+  - name: Semesters
+    columns:
+      - name: SemesterID
+        data_type: int
+        tests:
+          - unique
+          - not_null
+      - name: SemesterName
+        data_type: nvarchar
+      - name: StartDate
+        data_type: date
+      - name: EndDate
+        data_type: date
+  - name: Students
+    columns:
+      - name: StudentID
+        data_type: int
+        tests:
+          - unique
+          - not_null
+      - name: ProgramID
+        data_type: int
+        tests:
+          - not_null
+          - relationships:
+                to: ref('Programs')
+                field: ProgramID
+      - name: FirstName
+        data_type: nvarchar
+      - name: LastName
+        data_type: nvarchar
+      - name: Email
+        data_type: nvarchar
+      - name: Phone
+        data_type: nvarchar
+      - name: DateOfBirth
+        data_type: date
+      - name: Gender
+        data_type: char
+      - name: Address
+        data_type: nvarchar
+      - name: EnrollmentDate
+        data_type: date
+      - name: Status
+        data_type: nvarchar
+relationships:
+  - name: FK_Attendance_Enrollments
+  - name: FK_Courses_Departments
+  - name: FK_Sections_Courses
+  - name: FK_Sections_Semesters
+  - name: FK_Sections_Instructors
+  - name: FK_Sections_Classrooms
+  - name: FK_Enroll_Students
+  - name: FK_Enroll_Sections
+  - name: FK_Instructors_Departments
+  - name: FK_Programs_Departments
+  - name: FK_Students_Programs
