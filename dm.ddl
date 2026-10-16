@@ -1877,3 +1877,28 @@ END
 go
 
 
+
+ALTER TABLE [dbo].[CourseSections]
+DROP CONSTRAINT [UQ_Sections]
+go
+
+DROP INDEX [UQ_Sections] ON [dbo].[CourseSections]
+go
+
+ALTER TABLE [dbo].[CourseSections] 
+   ALTER COLUMN [SectionCode] nvarchar(130) NOT NULL
+go
+
+ALTER TABLE [dbo].[CourseSections]
+ADD CONSTRAINT [UQ_Sections] UNIQUE ([CourseID]  ASC,[SemesterID]  ASC,[SectionCode]  ASC)
+	WITH 
+	(
+		PAD_INDEX = OFF,
+		IGNORE_DUP_KEY = OFF,
+		STATISTICS_NORECOMPUTE = OFF,
+		ALLOW_ROW_LOCKS = ON,
+		ALLOW_PAGE_LOCKS = ON,
+		DATA_COMPRESSION = NONE
+	)
+	 ON "PRIMARY"
+go
