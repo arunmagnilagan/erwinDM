@@ -1877,3 +1877,474 @@ END
 go
 
 
+
+ALTER TABLE [dbo].[CourseSections] DROP CONSTRAINT [CK_Sections_Day]
+go
+
+ALTER TABLE [dbo].[CourseSections] DROP CONSTRAINT [CK_Sections_Max]
+go
+
+ALTER TABLE [dbo].[CourseSections] DROP CONSTRAINT [CK_Sections_Time]
+go
+
+
+ALTER TABLE [dbo].[CourseSections] DROP CONSTRAINT [DF_Sections_Max]
+go
+
+ALTER TABLE [dbo].[CourseSections]
+DROP CONSTRAINT [FK_Sections_Courses]
+go
+
+ALTER TABLE [dbo].[CourseSections]
+DROP CONSTRAINT [FK_Sections_Semesters]
+go
+
+ALTER TABLE [dbo].[CourseSections]
+DROP CONSTRAINT [FK_Sections_Instructors]
+go
+
+ALTER TABLE [dbo].[CourseSections]
+DROP CONSTRAINT [FK_Sections_Classrooms]
+go
+
+ALTER TABLE [dbo].[Enrollments]
+DROP CONSTRAINT [FK_Enroll_Sections]
+go
+
+ALTER TABLE [dbo].[CourseSections]
+DROP CONSTRAINT [PK_CourseSections]
+go
+
+ALTER TABLE [dbo].[CourseSections]
+DROP CONSTRAINT [UQ_Sections]
+go
+
+DROP INDEX [UQ_Sections] ON [dbo].[CourseSections]
+go
+
+execute sp_rename '[dbo].[CourseSections]', 'CourseSectionsAALE2327000'
+go
+
+CREATE TABLE [dbo].[CourseSections]
+( 
+	[SectionID]          int  IDENTITY ( 1,1 )  NOT NULL ,
+	[CourseID]           int  NOT NULL ,
+	[SemesterID]         int  NOT NULL ,
+	[InstructorID]       int  NOT NULL ,
+	[ClassroomID]        int  NULL ,
+	[SectionCode]        nvarchar(10) COLLATE SQL_Latin1_General_CP1_CI_AS  NOT NULL ,
+	[DayOfWeek]          nvarchar(10) COLLATE SQL_Latin1_General_CP1_CI_AS  NULL ,
+	[StartTime]          time(7)  NULL ,
+	[EndTime]            time(37)  NULL ,
+	[MaxStudents]        smallint  NOT NULL 
+	CONSTRAINT [DF_Sections_Max]
+		 DEFAULT  30
+)
+ON "PRIMARY"
+WITH 
+(
+	DATA_COMPRESSION = NONE
+)
+go
+
+ALTER TABLE [dbo].[CourseSections]
+	 WITH CHECK ADD CONSTRAINT [CK_Sections_Day] CHECK  ( [DayOfWeek]='Sun' OR [DayOfWeek]='Sat' OR [DayOfWeek]='Fri' OR [DayOfWeek]='Thu' OR [DayOfWeek]='Wed' OR [DayOfWeek]='Tue' OR [DayOfWeek]='Mon' )
+go
+
+ALTER TABLE [dbo].[CourseSections]
+	 WITH CHECK ADD CONSTRAINT [CK_Sections_Max] CHECK  ( [MaxStudents]>(0) )
+go
+
+ALTER TABLE [dbo].[CourseSections]
+ADD CONSTRAINT [PK_CourseSections] PRIMARY KEY  CLUSTERED ([SectionID] ASC)
+	WITH
+	(
+		PAD_INDEX = OFF,
+		IGNORE_DUP_KEY = OFF,
+		STATISTICS_NORECOMPUTE = OFF,
+		ALLOW_ROW_LOCKS = ON,
+		ALLOW_PAGE_LOCKS = ON,
+		DATA_COMPRESSION = NONE
+	)
+	 ON "PRIMARY"
+go
+
+ALTER TABLE [dbo].[CourseSections]
+ADD CONSTRAINT [UQ_Sections] UNIQUE ([CourseID]  ASC,[SemesterID]  ASC,[SectionCode]  ASC)
+	WITH 
+	(
+		PAD_INDEX = OFF,
+		IGNORE_DUP_KEY = OFF,
+		STATISTICS_NORECOMPUTE = OFF,
+		ALLOW_ROW_LOCKS = ON,
+		ALLOW_PAGE_LOCKS = ON,
+		DATA_COMPRESSION = NONE
+	)
+	 ON "PRIMARY"
+go
+
+
+SET IDENTITY_INSERT [dbo].[CourseSections] ON
+INSERT INTO [dbo].[CourseSections] ([SectionID], [CourseID], [SemesterID], [InstructorID], [ClassroomID], [SectionCode], [DayOfWeek], [StartTime], [EndTime], [MaxStudents]) SELECT [SectionID], [CourseID], [SemesterID], [InstructorID], [ClassroomID], [SectionCode], [DayOfWeek], [StartTime], [EndTime], [MaxStudents] FROM [dbo].CourseSectionsAALE2327000
+SET IDENTITY_INSERT [dbo].[CourseSections] OFF
+go
+
+ALTER TABLE [dbo].[CourseSections] WITH CHECK 
+	ADD CONSTRAINT [FK_Sections_Courses] FOREIGN KEY ([CourseID]) REFERENCES [dbo].[Courses]([CourseID])
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+ALTER TABLE [dbo].[CourseSections]
+	  WITH CHECK CHECK CONSTRAINT [FK_Sections_Courses]
+go
+
+ALTER TABLE [dbo].[CourseSections] WITH CHECK 
+	ADD CONSTRAINT [FK_Sections_Semesters] FOREIGN KEY ([SemesterID]) REFERENCES [dbo].[Semesters]([SemesterID])
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+ALTER TABLE [dbo].[CourseSections]
+	  WITH CHECK CHECK CONSTRAINT [FK_Sections_Semesters]
+go
+
+ALTER TABLE [dbo].[CourseSections] WITH CHECK 
+	ADD CONSTRAINT [FK_Sections_Instructors] FOREIGN KEY ([InstructorID]) REFERENCES [dbo].[Instructors]([InstructorID])
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+ALTER TABLE [dbo].[CourseSections]
+	  WITH CHECK CHECK CONSTRAINT [FK_Sections_Instructors]
+go
+
+ALTER TABLE [dbo].[CourseSections] WITH CHECK 
+	ADD CONSTRAINT [FK_Sections_Classrooms] FOREIGN KEY ([ClassroomID]) REFERENCES [dbo].[Classrooms]([ClassroomID])
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+ALTER TABLE [dbo].[CourseSections]
+	  WITH CHECK CHECK CONSTRAINT [FK_Sections_Classrooms]
+go
+
+
+ALTER TABLE [dbo].[CourseSections] WITH CHECK 
+	ADD CONSTRAINT  [CK_Sections_Time]
+		CHECK  ( [EndTime] IS NULL OR [StartTime] IS NULL OR [EndTime]>[StartTime] ) 
+go
+
+
+ALTER TABLE [dbo].[CourseSections]
+DISABLE CHANGE_TRACKING 
+go
+
+ALTER TABLE [dbo].[CourseSections]
+SET ( LOCK_ESCALATION = TABLE )
+go
+
+ALTER TABLE [dbo].[Enrollments] WITH CHECK 
+	ADD CONSTRAINT [FK_Enroll_Sections] FOREIGN KEY ([SectionID]) REFERENCES [dbo].[CourseSections]([SectionID])
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+ALTER TABLE [dbo].[Enrollments]
+	  WITH CHECK CHECK CONSTRAINT [FK_Enroll_Sections]
+go
+
+
+CREATE TRIGGER dbo.tD_CourseSections ON dbo.CourseSections FOR DELETE AS
+/* erwin Builtin Trigger */
+/* DELETE trigger on CourseSections */
+BEGIN
+  DECLARE  @errno   int,
+           @severity int,
+           @state    int,
+           @errmsg  varchar(255)
+    /* erwin Builtin Trigger */
+    /* dbo.CourseSections  dbo.Enrollments on parent delete no action */
+    /* ERWIN_RELATION:CHECKSUM="0006b9db", PARENT_OWNER="dbo", PARENT_TABLE="CourseSections"
+    CHILD_OWNER="dbo", CHILD_TABLE="Enrollments"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Enroll_Sections", FK_COLUMNS="SectionID" */
+    IF EXISTS (
+      SELECT * FROM deleted,dbo.Enrollments
+      WHERE
+        /*  %JoinFKPK(dbo.Enrollments,deleted," = "," AND") */
+        dbo.Enrollments.SectionID = deleted.SectionID
+    )
+    BEGIN
+      SELECT @errno  = 30001,
+             @errmsg = 'Cannot delete dbo.CourseSections because dbo.Enrollments exists.'
+      GOTO error
+    END
+
+    /* erwin Builtin Trigger */
+    /* dbo.Classrooms  dbo.CourseSections on child delete no action */
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="dbo", PARENT_TABLE="Classrooms"
+    CHILD_OWNER="dbo", CHILD_TABLE="CourseSections"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Sections_Classrooms", FK_COLUMNS="ClassroomID" */
+    IF EXISTS (SELECT * FROM deleted,dbo.Classrooms
+      WHERE
+        /* %JoinFKPK(deleted,dbo.Classrooms," = "," AND") */
+        deleted.ClassroomID = dbo.Classrooms.ClassroomID AND
+        NOT EXISTS (
+          SELECT * FROM dbo.CourseSections
+          WHERE
+            /* %JoinFKPK(dbo.CourseSections,dbo.Classrooms," = "," AND") */
+            dbo.CourseSections.ClassroomID = dbo.Classrooms.ClassroomID
+        )
+    )
+    BEGIN
+      SELECT @errno  = 30010,
+             @errmsg = 'Cannot delete last dbo.CourseSections because dbo.Classrooms exists.'
+      GOTO error
+    END
+
+    /* erwin Builtin Trigger */
+    /* dbo.Instructors  dbo.CourseSections on child delete no action */
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="dbo", PARENT_TABLE="Instructors"
+    CHILD_OWNER="dbo", CHILD_TABLE="CourseSections"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Sections_Instructors", FK_COLUMNS="InstructorID" */
+    IF EXISTS (SELECT * FROM deleted,dbo.Instructors
+      WHERE
+        /* %JoinFKPK(deleted,dbo.Instructors," = "," AND") */
+        deleted.InstructorID = dbo.Instructors.InstructorID AND
+        NOT EXISTS (
+          SELECT * FROM dbo.CourseSections
+          WHERE
+            /* %JoinFKPK(dbo.CourseSections,dbo.Instructors," = "," AND") */
+            dbo.CourseSections.InstructorID = dbo.Instructors.InstructorID
+        )
+    )
+    BEGIN
+      SELECT @errno  = 30010,
+             @errmsg = 'Cannot delete last dbo.CourseSections because dbo.Instructors exists.'
+      GOTO error
+    END
+
+    /* erwin Builtin Trigger */
+    /* dbo.Semesters  dbo.CourseSections on child delete no action */
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="dbo", PARENT_TABLE="Semesters"
+    CHILD_OWNER="dbo", CHILD_TABLE="CourseSections"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Sections_Semesters", FK_COLUMNS="SemesterID" */
+    IF EXISTS (SELECT * FROM deleted,dbo.Semesters
+      WHERE
+        /* %JoinFKPK(deleted,dbo.Semesters," = "," AND") */
+        deleted.SemesterID = dbo.Semesters.SemesterID AND
+        NOT EXISTS (
+          SELECT * FROM dbo.CourseSections
+          WHERE
+            /* %JoinFKPK(dbo.CourseSections,dbo.Semesters," = "," AND") */
+            dbo.CourseSections.SemesterID = dbo.Semesters.SemesterID
+        )
+    )
+    BEGIN
+      SELECT @errno  = 30010,
+             @errmsg = 'Cannot delete last dbo.CourseSections because dbo.Semesters exists.'
+      GOTO error
+    END
+
+    /* erwin Builtin Trigger */
+    /* dbo.Courses  dbo.CourseSections on child delete no action */
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="dbo", PARENT_TABLE="Courses"
+    CHILD_OWNER="dbo", CHILD_TABLE="CourseSections"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Sections_Courses", FK_COLUMNS="CourseID" */
+    IF EXISTS (SELECT * FROM deleted,dbo.Courses
+      WHERE
+        /* %JoinFKPK(deleted,dbo.Courses," = "," AND") */
+        deleted.CourseID = dbo.Courses.CourseID AND
+        NOT EXISTS (
+          SELECT * FROM dbo.CourseSections
+          WHERE
+            /* %JoinFKPK(dbo.CourseSections,dbo.Courses," = "," AND") */
+            dbo.CourseSections.CourseID = dbo.Courses.CourseID
+        )
+    )
+    BEGIN
+      SELECT @errno  = 30010,
+             @errmsg = 'Cannot delete last dbo.CourseSections because dbo.Courses exists.'
+      GOTO error
+    END
+
+
+    /* erwin Builtin Trigger */
+    RETURN
+error:
+   RAISERROR (@errmsg, -- Message text.
+              @severity, -- Severity (0~25).
+              @state) -- State (0~255).
+    rollback transaction
+END
+
+go
+
+
+CREATE TRIGGER dbo.tU_CourseSections ON dbo.CourseSections FOR UPDATE AS
+/* erwin Builtin Trigger */
+/* UPDATE trigger on CourseSections */
+BEGIN
+  DECLARE  @numrows int,
+           @nullcnt int,
+           @validcnt int,
+           @insSectionID int
+           @errno   int,
+           @severity int,
+           @state    int,
+           @errmsg  varchar(255)
+
+  SELECT @numrows = @@rowcount
+  /* erwin Builtin Trigger */
+  /* dbo.CourseSections  dbo.Enrollments on parent update no action */
+  /* ERWIN_RELATION:CHECKSUM="00072b61", PARENT_OWNER="dbo", PARENT_TABLE="CourseSections"
+    CHILD_OWNER="dbo", CHILD_TABLE="Enrollments"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Enroll_Sections", FK_COLUMNS="SectionID" */
+  IF
+    /* %ParentPK(" OR",UPDATE) */
+    UPDATE(SectionID)
+  BEGIN
+    IF EXISTS (
+      SELECT * FROM deleted,dbo.Enrollments
+      WHERE
+        /*  %JoinFKPK(dbo.Enrollments,deleted," = "," AND") */
+        dbo.Enrollments.SectionID = deleted.SectionID
+    )
+    BEGIN
+      SELECT @errno  = 30005,
+             @errmsg = 'Cannot update dbo.CourseSections because dbo.Enrollments exists.'
+      GOTO error
+    END
+  END
+
+  /* erwin Builtin Trigger */
+  /* dbo.Classrooms  dbo.CourseSections on child update no action */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="dbo", PARENT_TABLE="Classrooms"
+    CHILD_OWNER="dbo", CHILD_TABLE="CourseSections"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Sections_Classrooms", FK_COLUMNS="ClassroomID" */
+  IF
+    /* %ChildFK(" OR",UPDATE) */
+    UPDATE(ClassroomID)
+  BEGIN
+    SELECT @nullcnt = 0
+    SELECT @validcnt = count(*)
+      FROM inserted,dbo.Classrooms
+        WHERE
+          /* %JoinFKPK(inserted,dbo.Classrooms) */
+          inserted.ClassroomID = dbo.Classrooms.ClassroomID
+    /* %NotnullFK(inserted," IS NULL","select @nullcnt = count(*) from inserted where"," AND") */
+    select @nullcnt = count(*) from inserted where
+      inserted.ClassroomID IS NULL
+    IF @validcnt + @nullcnt != @numrows
+    BEGIN
+      SELECT @errno  = 30007,
+             @errmsg = 'Cannot update dbo.CourseSections because dbo.Classrooms does not exist.'
+      GOTO error
+    END
+  END
+
+  /* erwin Builtin Trigger */
+  /* dbo.Instructors  dbo.CourseSections on child update no action */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="dbo", PARENT_TABLE="Instructors"
+    CHILD_OWNER="dbo", CHILD_TABLE="CourseSections"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Sections_Instructors", FK_COLUMNS="InstructorID" */
+  IF
+    /* %ChildFK(" OR",UPDATE) */
+    UPDATE(InstructorID)
+  BEGIN
+    SELECT @nullcnt = 0
+    SELECT @validcnt = count(*)
+      FROM inserted,dbo.Instructors
+        WHERE
+          /* %JoinFKPK(inserted,dbo.Instructors) */
+          inserted.InstructorID = dbo.Instructors.InstructorID
+    /* %NotnullFK(inserted," IS NULL","select @nullcnt = count(*) from inserted where"," AND") */
+    
+    IF @validcnt + @nullcnt != @numrows
+    BEGIN
+      SELECT @errno  = 30007,
+             @errmsg = 'Cannot update dbo.CourseSections because dbo.Instructors does not exist.'
+      GOTO error
+    END
+  END
+
+  /* erwin Builtin Trigger */
+  /* dbo.Semesters  dbo.CourseSections on child update no action */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="dbo", PARENT_TABLE="Semesters"
+    CHILD_OWNER="dbo", CHILD_TABLE="CourseSections"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Sections_Semesters", FK_COLUMNS="SemesterID" */
+  IF
+    /* %ChildFK(" OR",UPDATE) */
+    UPDATE(SemesterID)
+  BEGIN
+    SELECT @nullcnt = 0
+    SELECT @validcnt = count(*)
+      FROM inserted,dbo.Semesters
+        WHERE
+          /* %JoinFKPK(inserted,dbo.Semesters) */
+          inserted.SemesterID = dbo.Semesters.SemesterID
+    /* %NotnullFK(inserted," IS NULL","select @nullcnt = count(*) from inserted where"," AND") */
+    
+    IF @validcnt + @nullcnt != @numrows
+    BEGIN
+      SELECT @errno  = 30007,
+             @errmsg = 'Cannot update dbo.CourseSections because dbo.Semesters does not exist.'
+      GOTO error
+    END
+  END
+
+  /* erwin Builtin Trigger */
+  /* dbo.Courses  dbo.CourseSections on child update no action */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="dbo", PARENT_TABLE="Courses"
+    CHILD_OWNER="dbo", CHILD_TABLE="CourseSections"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Sections_Courses", FK_COLUMNS="CourseID" */
+  IF
+    /* %ChildFK(" OR",UPDATE) */
+    UPDATE(CourseID)
+  BEGIN
+    SELECT @nullcnt = 0
+    SELECT @validcnt = count(*)
+      FROM inserted,dbo.Courses
+        WHERE
+          /* %JoinFKPK(inserted,dbo.Courses) */
+          inserted.CourseID = dbo.Courses.CourseID
+    /* %NotnullFK(inserted," IS NULL","select @nullcnt = count(*) from inserted where"," AND") */
+    
+    IF @validcnt + @nullcnt != @numrows
+    BEGIN
+      SELECT @errno  = 30007,
+             @errmsg = 'Cannot update dbo.CourseSections because dbo.Courses does not exist.'
+      GOTO error
+    END
+  END
+
+
+  /* erwin Builtin Trigger */
+  RETURN
+error:
+   RAISERROR (@errmsg, -- Message text.
+              @severity, -- Severity (0~25).
+              @state) -- State (0~255).
+    rollback transaction
+END
+
+go
+
+
+
+
+DROP TABLE IF EXISTS [dbo].CourseSectionsAALE2327000
+go
+
+EXEC sp_tableoption '[dbo].[CourseSections]','vardecimal storage format','OFF'
+go
