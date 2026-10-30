@@ -4068,3 +4068,13 @@ go
 
 
 
+
+CREATE TABLE [demo]
+( 
+	[id]                 char(18)  NOT NULL 
+)
+go
+
+ALTER TABLE [demo]
+ADD CONSTRAINT [XPKdemo] PRIMARY KEY  CLUSTERED ([id] ASC)
+go
