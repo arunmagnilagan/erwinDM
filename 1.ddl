@@ -4068,3 +4068,10 @@ go
 
 
 
+
+DROP TABLE IF EXISTS [customerops_test]
+go
+
+ALTER TABLE [dbo].[Book] 
+   ALTER COLUMN [Book_Typ] char(152) NULL
+go
