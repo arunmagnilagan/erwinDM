@@ -3261,3 +3261,14 @@ END;
 /
 
 
+
+CREATE TABLE Custops
+(
+	CustNam              CHAR(18)  NOT NULL 
+);
+
+CREATE UNIQUE INDEX XPKcustomerops ON Custops
+(CustNam   ASC);
+
+ALTER TABLE Custops
+ADD CONSTRAINT  XPKcustomerops PRIMARY KEY (CustNam);
