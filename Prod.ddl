@@ -3261,3 +3261,965 @@ END;
 /
 
 
+
+ALTER TABLE Book_YTD_Sls
+DROP CONSTRAINT FK_Book_Book_YTD_Sls;
+
+ALTER TABLE BookAuth
+DROP CONSTRAINT FK_Auth_BookAuth;
+
+ALTER TABLE BookAuth
+DROP CONSTRAINT FK_Book_BookAuth;
+
+ALTER TABLE Rylty_Pmt
+DROP CONSTRAINT FK_BookAuth_Rylty_Pmt;
+
+ALTER TABLE Ordr_Itm
+DROP CONSTRAINT FK_Disc_Ordr_Itm;
+
+ALTER TABLE Ordr_Itm
+DROP CONSTRAINT FK_Purchase_Ordr_Ordr_Itm;
+
+ALTER TABLE Ordr_Itm
+DROP CONSTRAINT FK_Book_Ordr_Itm;
+
+ALTER TABLE Rylty_Hist
+DROP CONSTRAINT FK_Ordr_Itm_Rylty_Hist;
+
+ALTER TABLE Book_Retrun
+DROP CONSTRAINT FK_Ordr_Itm_Book_Retrun;
+
+ALTER TABLE Ordr_Ship
+DROP CONSTRAINT FK_Ordr_Itm_Ordr_Ship;
+
+ALTER TABLE Rylty_Pmt
+DROP CONSTRAINT FK_Rylty_Rylty_Pmt;
+
+ALTER TABLE Book_YTD_Sls
+DROP PRIMARY KEY CASCADE  DROP INDEX;
+
+ALTER TABLE BookAuth
+DROP PRIMARY KEY CASCADE  DROP INDEX;
+
+ALTER TABLE Ordr_Itm
+DROP PRIMARY KEY CASCADE  DROP INDEX;
+
+ALTER TABLE Rylty_Pmt
+DROP PRIMARY KEY CASCADE  DROP INDEX;
+
+DROP TRIGGER tD_Book_YTD_Sls;
+
+DROP TRIGGER tU_Book_YTD_Sls;
+
+DROP TRIGGER tI_Book_YTD_Sls;
+
+DROP VIEW Publisher_View CASCADE CONSTRAINTS;
+
+ALTER TABLE Book_YTD_Sls RENAME TO Book_YTD_SlsABAA3706007;
+
+DROP TRIGGER tD_BookAuth;
+
+DROP TRIGGER tU_BookAuth;
+
+DROP TRIGGER tI_BookAuth;
+
+DROP VIEW titleview CASCADE CONSTRAINTS;
+
+ALTER TABLE BookAuth RENAME TO BookAuthABAA3706004;
+
+DROP TRIGGER tD_Ordr_Itm;
+
+DROP TRIGGER tU_Ordr_Itm;
+
+DROP TRIGGER tI_Ordr_Itm;
+
+DROP VIEW Order_View CASCADE CONSTRAINTS;
+
+ALTER TABLE Ordr_Itm RENAME TO Ordr_ItmABAA3706005;
+
+DROP TRIGGER tD_Rylty_Pmt;
+
+DROP TRIGGER tU_Rylty_Pmt;
+
+DROP TRIGGER tI_Rylty_Pmt;
+
+ALTER TABLE Rylty_Pmt RENAME TO Rylty_PmtABAA3706006;
+
+
+ALTER TABLE Emp MODIFY(Emp_Frst_Nam VARCHAR(27)  );
+
+
+ALTER TABLE Book MODIFY(Book_Id CHAR(92)  );
+
+CREATE TABLE Book_YTD_Sls
+(
+	Book_Id              CHAR(92)  NOT NULL ,
+	Yr_To_Dt_Sls_Amt     DECIMAL(10,2)  NULL ,
+	Yr_To_Dt_Sls_Dt      DATE  DEFAULT SYSDATE  NULL 
+);
+
+COMMENT ON TABLE Book_YTD_Sls IS 'This tracks the YTD sales for each book we offer our customers.';
+
+COMMENT ON COLUMN Book_YTD_Sls.Book_Id IS 'A unique identifier for all books we have available for sale in our inventory.';
+
+COMMENT ON COLUMN Book_YTD_Sls.Yr_To_Dt_Sls_Amt IS 'The running total for year to date sales for a specific book. This excludes the sale value if the book is returned.';
+
+COMMENT ON COLUMN Book_YTD_Sls.Yr_To_Dt_Sls_Dt IS 'The latest date in which a book was purchased by a customer and was not returned.';
+
+CREATE UNIQUE INDEX XPKBook_YTD_Sales ON Book_YTD_Sls
+(Book_Id   ASC);
+
+CREATE VIEW Publisher_View ( Emp_Frst_Nam,Emp_Lst_Nam,Publshr_Nam,Book_Nam,Yr_To_Dt_Sls_Amt ) 
+	 AS  SELECT Emp.Emp_Frst_Nam,Emp.Emp_Lst_Nam,Publshr.Publshr_Nam,Book.Book_Nam,Book_YTD_Sls.Yr_To_Dt_Sls_Amt
+		FROM Publshr ,Book ,Book_YTD_Sls ,Emp ;
+
+COMMENT ON COLUMN Publisher_View.Emp_Frst_Nam IS 'The Employee first name as recorded in HR.';
+
+COMMENT ON COLUMN Publisher_View.Emp_Lst_Nam IS 'The last name for the employee as recorded in HR.';
+
+COMMENT ON COLUMN Publisher_View.Publshr_Nam IS 'The name of the book publishing company.';
+
+COMMENT ON COLUMN Publisher_View.Book_Nam IS 'The title of a book.';
+
+COMMENT ON COLUMN Publisher_View.Yr_To_Dt_Sls_Amt IS 'The running total for year to date sales for a specific book. This excludes the sale value if the book is returned.';
+
+CREATE TABLE BookAuth
+(
+	Auth_Id              CHAR(9)  NOT NULL ,
+	Book_Id              CHAR(92)  NOT NULL 
+);
+
+COMMENT ON TABLE BookAuth IS 'This is the Author or Authors name for any book available for purchase.';
+
+COMMENT ON COLUMN BookAuth.Auth_Id IS 'A unique identifier for the author of a book.';
+
+COMMENT ON COLUMN BookAuth.Book_Id IS 'A unique identifier for all books we have available for sale in our inventory.';
+
+CREATE UNIQUE INDEX UPKCL_taind ON BookAuth
+(Auth_Id   ASC,Book_Id   ASC);
+
+CREATE VIEW titleview
+   (Book_Nam, Auth_Id, Auth_Lst_Nam, MRSP_Prc, Publshr_Id)
+AS SELECT
+   Book.Book_Nam, Auth.Auth_Id, Auth.Auth_Lst_Nam,
+   Book.MRSP_Prc, Book.Publshr_Id
+FROM Book, Auth, BookAuth
+;
+
+COMMENT ON COLUMN titleview.Book_Nam IS 'The title of a book.';
+
+COMMENT ON COLUMN titleview.Auth_Id IS 'A unique identifier for the author of a book.';
+
+COMMENT ON COLUMN titleview.Auth_Lst_Nam IS 'The last name for the Author of a book.';
+
+COMMENT ON COLUMN titleview.MRSP_Prc IS 'The full retail price for a book.';
+
+COMMENT ON COLUMN titleview.Publshr_Id IS 'The unique identifier for the list of all Publishers our company does business with.';
+
+CREATE TABLE Ordr_Itm
+(
+	Ordr_Qty             SMALLINT  NULL ,
+	Ordr_Nbr             INTEGER  NOT NULL ,
+	Book_Id              CHAR(92)  NOT NULL ,
+	Itm_Seq_Nbr          INTEGER  NOT NULL ,
+	Disc_Typ             VARCHAR2(4)  NULL ,
+	Ordr_Disc_Amt        DECIMAL(7,2)  NULL ,
+	Ordr_Prc             DECIMAL(7,2)  NULL 
+);
+
+COMMENT ON TABLE Ordr_Itm IS 'Specific line item entries for a purchase order form a customer.';
+
+COMMENT ON COLUMN Ordr_Itm.Ordr_Qty IS 'The number of copies of a book ordered on a line item for a purchase order.';
+
+COMMENT ON COLUMN Ordr_Itm.Ordr_Nbr IS 'The unique identifier for a purchase order.';
+
+COMMENT ON COLUMN Ordr_Itm.Book_Id IS 'A unique identifier for all books we have available for sale in our inventory.';
+
+COMMENT ON COLUMN Ordr_Itm.Itm_Seq_Nbr IS 'A unique sequence number for all line items placed in a purchase order.';
+
+COMMENT ON COLUMN Ordr_Itm.Disc_Typ IS 'The type of discount our company is providing a customer.';
+
+COMMENT ON COLUMN Ordr_Itm.Ordr_Disc_Amt IS 'The discount credited on a purchase order for a book.';
+
+COMMENT ON COLUMN Ordr_Itm.Ordr_Prc IS 'The total price charge for the book(s) ordered in a line item on a purchase order.';
+
+CREATE UNIQUE INDEX XPKOrder_Item ON Ordr_Itm
+(Ordr_Nbr   ASC,Itm_Seq_Nbr   ASC);
+
+CREATE VIEW Order_View ( Stor_Nam,Ordr_Nbr,Ordr_Dt,Book_Nam,Ordr_Qty,Ordr_Disc_Amt,Ordr_Prc ) 
+	 AS  SELECT Stor_Nam.Stor_Nam,Purchase_Ordr.Ordr_Nbr,Purchase_Ordr.Ordr_Dt,Book.Book_Nam,Ordr_Itm.Ordr_Qty,Ordr_Itm.Ordr_Disc_Amt,Ordr_Itm.Ordr_Prc
+		FROM Ordr_Itm ,Book ,Purchase_Ordr ,Stor_Nam ;
+
+COMMENT ON COLUMN Order_View.Stor_Nam IS 'The formal name for the store.';
+
+COMMENT ON COLUMN Order_View.Ordr_Nbr IS 'The unique identifier for a purchase order.';
+
+COMMENT ON COLUMN Order_View.Ordr_Dt IS 'The date in which a purchase order is received and accepted by our company.';
+
+COMMENT ON COLUMN Order_View.Book_Nam IS 'The title of a book.';
+
+COMMENT ON COLUMN Order_View.Ordr_Qty IS 'The number of copies of a book ordered on a line item for a purchase order.';
+
+COMMENT ON COLUMN Order_View.Ordr_Disc_Amt IS 'The discount credited on a purchase order for a book.';
+
+COMMENT ON COLUMN Order_View.Ordr_Prc IS 'The total price charge for the book(s) ordered in a line item on a purchase order.';
+
+CREATE TABLE Rylty_Pmt
+(
+	Auth_Id              CHAR(9)  NOT NULL ,
+	Book_Id              CHAR(92)  NOT NULL ,
+	Rylty_Id             CHAR(9)  DEFAULT 212  NOT NULL  CHECK (Rylty_Id IN (201, 212, 215, 732, 908)),
+	Pmt_Dt               DATE  DEFAULT SYSDATE  NULL ,
+	Pmt_Amt              DECIMAL(7,2)  NULL 
+);
+
+COMMENT ON TABLE Rylty_Pmt IS 'The royalty agreement our company has established with the book''s author in terms of the royalty agreement contract we negotiated with the author.';
+
+COMMENT ON COLUMN Rylty_Pmt.Auth_Id IS 'A unique identifier for the author of a book.';
+
+COMMENT ON COLUMN Rylty_Pmt.Book_Id IS 'A unique identifier for all books we have available for sale in our inventory.';
+
+COMMENT ON COLUMN Rylty_Pmt.Rylty_Id IS 'The unique identifier for the list of royalty agreements we have in our company.';
+
+COMMENT ON COLUMN Rylty_Pmt.Pmt_Dt IS 'The date our company paid an author the royalty fee for a book.';
+
+COMMENT ON COLUMN Rylty_Pmt.Pmt_Amt IS 'The amount of royalty fee our company paid an author for a book we sold.';
+
+CREATE UNIQUE INDEX XPKRoyalty_Payment ON Rylty_Pmt
+(Auth_Id   ASC,Book_Id   ASC,Rylty_Id   ASC);
+
+ALTER TABLE Book_YTD_Sls
+ADD CONSTRAINT  XPKBook_YTD_Sales PRIMARY KEY (Book_Id);
+
+INSERT INTO Book_YTD_Sls (Book_Id, Yr_To_Dt_Sls_Amt, Yr_To_Dt_Sls_Dt) SELECT Book_Id, Yr_To_Dt_Sls_Amt, Yr_To_Dt_Sls_Dt FROM Book_YTD_SlsABAA3706007;
+
+ALTER TABLE BookAuth
+ADD CONSTRAINT  UPKCL_taind PRIMARY KEY (Auth_Id,Book_Id);
+
+INSERT INTO BookAuth (Auth_Id, Book_Id) SELECT Auth_Id, Book_Id FROM BookAuthABAA3706004;
+
+ALTER TABLE Ordr_Itm
+ADD CONSTRAINT  XPKOrder_Item PRIMARY KEY (Ordr_Nbr,Itm_Seq_Nbr);
+
+INSERT INTO Ordr_Itm (Ordr_Nbr, Itm_Seq_Nbr, Book_Id, Ordr_Qty, Disc_Typ, Ordr_Disc_Amt, Ordr_Prc) SELECT Ordr_Nbr, Itm_Seq_Nbr, Book_Id, Ordr_Qty, Disc_Typ, Ordr_Disc_Amt, Ordr_Prc FROM Ordr_ItmABAA3706005;
+
+ALTER TABLE Rylty_Pmt
+ADD CONSTRAINT  XPKRoyalty_Payment PRIMARY KEY (Auth_Id,Book_Id,Rylty_Id);
+
+INSERT INTO Rylty_Pmt (Auth_Id, Book_Id, Rylty_Id, Pmt_Dt, Pmt_Amt) SELECT Auth_Id, Book_Id, Rylty_Id, Pmt_Dt, Pmt_Amt FROM Rylty_PmtABAA3706006;
+
+ALTER TABLE Book_YTD_Sls
+ADD 
+CONSTRAINT FK_Book_Book_YTD_Sls FOREIGN KEY (Book_Id) REFERENCES Book (Book_Id);
+
+ALTER TABLE BookAuth
+ADD 
+CONSTRAINT FK_Auth_BookAuth FOREIGN KEY (Auth_Id) REFERENCES Auth (Auth_Id);
+
+ALTER TABLE BookAuth
+ADD 
+CONSTRAINT FK_Book_BookAuth FOREIGN KEY (Book_Id) REFERENCES Book (Book_Id);
+
+ALTER TABLE Rylty_Pmt
+ADD 
+CONSTRAINT FK_BookAuth_Rylty_Pmt FOREIGN KEY (Auth_Id, Book_Id) REFERENCES BookAuth (Auth_Id, Book_Id);
+
+ALTER TABLE Ordr_Itm
+ADD 
+CONSTRAINT FK_Disc_Ordr_Itm FOREIGN KEY (Disc_Typ) REFERENCES Disc (Disc_Typ) ON DELETE SET NULL;
+
+ALTER TABLE Ordr_Itm
+ADD 
+CONSTRAINT FK_Purchase_Ordr_Ordr_Itm FOREIGN KEY (Ordr_Nbr) REFERENCES Purchase_Ordr (Ordr_Nbr);
+
+ALTER TABLE Ordr_Itm
+ADD 
+CONSTRAINT FK_Book_Ordr_Itm FOREIGN KEY (Book_Id) REFERENCES Book (Book_Id);
+
+ALTER TABLE Rylty_Hist
+ADD 
+CONSTRAINT FK_Ordr_Itm_Rylty_Hist FOREIGN KEY (Ordr_Nbr, Itm_Seq_Nbr) REFERENCES Ordr_Itm (Ordr_Nbr, Itm_Seq_Nbr) ON DELETE SET NULL;
+
+ALTER TABLE Book_Retrun
+ADD 
+CONSTRAINT FK_Ordr_Itm_Book_Retrun FOREIGN KEY (Ordr_Nbr, Itm_Seq_Nbr) REFERENCES Ordr_Itm (Ordr_Nbr, Itm_Seq_Nbr) ON DELETE SET NULL;
+
+ALTER TABLE Ordr_Ship
+ADD 
+CONSTRAINT FK_Ordr_Itm_Ordr_Ship FOREIGN KEY (Ordr_Nbr, Itm_Seq_Nbr) REFERENCES Ordr_Itm (Ordr_Nbr, Itm_Seq_Nbr);
+
+ALTER TABLE Rylty_Pmt
+ADD 
+CONSTRAINT FK_Rylty_Rylty_Pmt FOREIGN KEY (Rylty_Id) REFERENCES Rylty (Rylty_Id);
+
+
+CREATE  TRIGGER tI_Book_YTD_Sls BEFORE INSERT ON Book_YTD_Sls for each row
+-- erwin Builtin Trigger
+-- INSERT trigger on Book_YTD_Sls 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* Book  Book_YTD_Sls on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="0000e871", PARENT_OWNER="", PARENT_TABLE="Book"
+    CHILD_OWNER="", CHILD_TABLE="Book_YTD_Sls"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Book_Book_YTD_Sls", FK_COLUMNS="Book_Id" */
+    SELECT count(*) INTO NUMROWS
+      FROM Book
+      WHERE
+        /* %JoinFKPK(:%New,Book," = "," AND") */
+        :new.Book_Id = Book.Book_Id;
+    IF (
+      /* %NotnullFK(:%New," IS NOT NULL AND") */
+      
+      NUMROWS = 0
+    )
+    THEN
+      raise_application_error(
+        -20002,
+        'Cannot insert Book_YTD_Sls because Book does not exist.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_Book_YTD_Sls AFTER UPDATE ON Book_YTD_Sls for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on Book_YTD_Sls 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* erwin Builtin Trigger */
+  /* Book  Book_YTD_Sls on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="0000e83b", PARENT_OWNER="", PARENT_TABLE="Book"
+    CHILD_OWNER="", CHILD_TABLE="Book_YTD_Sls"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Book_Book_YTD_Sls", FK_COLUMNS="Book_Id" */
+  SELECT count(*) INTO NUMROWS
+    FROM Book
+    WHERE
+      /* %JoinFKPK(:%New,Book," = "," AND") */
+      :new.Book_Id = Book.Book_Id;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update Book_YTD_Sls because Book does not exist.'
+    );
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER  tD_BookAuth AFTER DELETE ON BookAuth for each row
+-- erwin Builtin Trigger
+-- DELETE trigger on BookAuth 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* BookAuth  Rylty_Pmt on parent delete restrict */
+    /* ERWIN_RELATION:CHECKSUM="0000f093", PARENT_OWNER="", PARENT_TABLE="BookAuth"
+    CHILD_OWNER="", CHILD_TABLE="Rylty_Pmt"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_BookAuth_Rylty_Pmt", FK_COLUMNS="Auth_Id""Book_Id" */
+    SELECT count(*) INTO NUMROWS
+      FROM Rylty_Pmt
+      WHERE
+        /*  %JoinFKPK(Rylty_Pmt,:%Old," = "," AND") */
+        Rylty_Pmt.Auth_Id = :old.Auth_Id AND
+        Rylty_Pmt.Book_Id = :old.Book_Id;
+    IF (NUMROWS > 0)
+    THEN
+      raise_application_error(
+        -20001,
+        'Cannot delete BookAuth because Rylty_Pmt exists.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tI_BookAuth BEFORE INSERT ON BookAuth for each row
+-- erwin Builtin Trigger
+-- INSERT trigger on BookAuth 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* Book  BookAuth on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="0001d37c", PARENT_OWNER="", PARENT_TABLE="Book"
+    CHILD_OWNER="", CHILD_TABLE="BookAuth"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Book_BookAuth", FK_COLUMNS="Book_Id" */
+    SELECT count(*) INTO NUMROWS
+      FROM Book
+      WHERE
+        /* %JoinFKPK(:%New,Book," = "," AND") */
+        :new.Book_Id = Book.Book_Id;
+    IF (
+      /* %NotnullFK(:%New," IS NOT NULL AND") */
+      
+      NUMROWS = 0
+    )
+    THEN
+      raise_application_error(
+        -20002,
+        'Cannot insert BookAuth because Book does not exist.'
+      );
+    END IF;
+
+    /* erwin Builtin Trigger */
+    /* Auth  BookAuth on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="Auth"
+    CHILD_OWNER="", CHILD_TABLE="BookAuth"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Auth_BookAuth", FK_COLUMNS="Auth_Id" */
+    SELECT count(*) INTO NUMROWS
+      FROM Auth
+      WHERE
+        /* %JoinFKPK(:%New,Auth," = "," AND") */
+        :new.Auth_Id = Auth.Auth_Id;
+    IF (
+      /* %NotnullFK(:%New," IS NOT NULL AND") */
+      
+      NUMROWS = 0
+    )
+    THEN
+      raise_application_error(
+        -20002,
+        'Cannot insert BookAuth because Auth does not exist.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_BookAuth AFTER UPDATE ON BookAuth for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on BookAuth 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* erwin Builtin Trigger */
+  /* BookAuth  Rylty_Pmt on parent update restrict */
+  /* ERWIN_RELATION:CHECKSUM="0003105b", PARENT_OWNER="", PARENT_TABLE="BookAuth"
+    CHILD_OWNER="", CHILD_TABLE="Rylty_Pmt"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_BookAuth_Rylty_Pmt", FK_COLUMNS="Auth_Id""Book_Id" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.Auth_Id <> :new.Auth_Id OR 
+    :old.Book_Id <> :new.Book_Id
+  THEN
+    SELECT count(*) INTO NUMROWS
+      FROM Rylty_Pmt
+      WHERE
+        /*  %JoinFKPK(Rylty_Pmt,:%Old," = "," AND") */
+        Rylty_Pmt.Auth_Id = :old.Auth_Id AND
+        Rylty_Pmt.Book_Id = :old.Book_Id;
+    IF (NUMROWS > 0)
+    THEN 
+      raise_application_error(
+        -20005,
+        'Cannot update BookAuth because Rylty_Pmt exists.'
+      );
+    END IF;
+  END IF;
+
+  /* erwin Builtin Trigger */
+  /* Book  BookAuth on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="Book"
+    CHILD_OWNER="", CHILD_TABLE="BookAuth"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Book_BookAuth", FK_COLUMNS="Book_Id" */
+  SELECT count(*) INTO NUMROWS
+    FROM Book
+    WHERE
+      /* %JoinFKPK(:%New,Book," = "," AND") */
+      :new.Book_Id = Book.Book_Id;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update BookAuth because Book does not exist.'
+    );
+  END IF;
+
+  /* erwin Builtin Trigger */
+  /* Auth  BookAuth on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="Auth"
+    CHILD_OWNER="", CHILD_TABLE="BookAuth"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Auth_BookAuth", FK_COLUMNS="Auth_Id" */
+  SELECT count(*) INTO NUMROWS
+    FROM Auth
+    WHERE
+      /* %JoinFKPK(:%New,Auth," = "," AND") */
+      :new.Auth_Id = Auth.Auth_Id;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update BookAuth because Auth does not exist.'
+    );
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER  tD_Ordr_Itm AFTER DELETE ON Ordr_Itm for each row
+-- erwin Builtin Trigger
+-- DELETE trigger on Ordr_Itm 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* Ordr_Itm  Ordr_Ship on parent delete restrict */
+    /* ERWIN_RELATION:CHECKSUM="0002fc8c", PARENT_OWNER="", PARENT_TABLE="Ordr_Itm"
+    CHILD_OWNER="", CHILD_TABLE="Ordr_Ship"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Ordr_Itm_Ordr_Ship", FK_COLUMNS="Ordr_Nbr""Itm_Seq_Nbr" */
+    SELECT count(*) INTO NUMROWS
+      FROM Ordr_Ship
+      WHERE
+        /*  %JoinFKPK(Ordr_Ship,:%Old," = "," AND") */
+        Ordr_Ship.Ordr_Nbr = :old.Ordr_Nbr AND
+        Ordr_Ship.Itm_Seq_Nbr = :old.Itm_Seq_Nbr;
+    IF (NUMROWS > 0)
+    THEN
+      raise_application_error(
+        -20001,
+        'Cannot delete Ordr_Itm because Ordr_Ship exists.'
+      );
+    END IF;
+
+    /* erwin Builtin Trigger */
+    /* Ordr_Itm  Book_Retrun on parent delete set null */
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="Ordr_Itm"
+    CHILD_OWNER="", CHILD_TABLE="Book_Retrun"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Ordr_Itm_Book_Retrun", FK_COLUMNS="Ordr_Nbr""Itm_Seq_Nbr" */
+    UPDATE Book_Retrun
+      SET
+        /* %SetFK(Book_Retrun,NULL) */
+        Book_Retrun.Ordr_Nbr = NULL,
+        Book_Retrun.Itm_Seq_Nbr = NULL
+      WHERE
+        /* %JoinFKPK(Book_Retrun,:%Old," = "," AND") */
+        Book_Retrun.Ordr_Nbr = :old.Ordr_Nbr AND
+        Book_Retrun.Itm_Seq_Nbr = :old.Itm_Seq_Nbr;
+
+    /* erwin Builtin Trigger */
+    /* Ordr_Itm  Rylty_Hist on parent delete set null */
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="Ordr_Itm"
+    CHILD_OWNER="", CHILD_TABLE="Rylty_Hist"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Ordr_Itm_Rylty_Hist", FK_COLUMNS="Ordr_Nbr""Itm_Seq_Nbr" */
+    UPDATE Rylty_Hist
+      SET
+        /* %SetFK(Rylty_Hist,NULL) */
+        Rylty_Hist.Ordr_Nbr = NULL,
+        Rylty_Hist.Itm_Seq_Nbr = NULL
+      WHERE
+        /* %JoinFKPK(Rylty_Hist,:%Old," = "," AND") */
+        Rylty_Hist.Ordr_Nbr = :old.Ordr_Nbr AND
+        Rylty_Hist.Itm_Seq_Nbr = :old.Itm_Seq_Nbr;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tI_Ordr_Itm BEFORE INSERT ON Ordr_Itm for each row
+-- erwin Builtin Trigger
+-- INSERT trigger on Ordr_Itm 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* Book  Ordr_Itm on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="000311d0", PARENT_OWNER="", PARENT_TABLE="Book"
+    CHILD_OWNER="", CHILD_TABLE="Ordr_Itm"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Book_Ordr_Itm", FK_COLUMNS="Book_Id" */
+    SELECT count(*) INTO NUMROWS
+      FROM Book
+      WHERE
+        /* %JoinFKPK(:%New,Book," = "," AND") */
+        :new.Book_Id = Book.Book_Id;
+    IF (
+      /* %NotnullFK(:%New," IS NOT NULL AND") */
+      
+      NUMROWS = 0
+    )
+    THEN
+      raise_application_error(
+        -20002,
+        'Cannot insert Ordr_Itm because Book does not exist.'
+      );
+    END IF;
+
+    /* erwin Builtin Trigger */
+    /* Disc  Ordr_Itm on child insert set null */
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="Disc"
+    CHILD_OWNER="", CHILD_TABLE="Ordr_Itm"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Disc_Ordr_Itm", FK_COLUMNS="Disc_Typ" */
+    UPDATE Ordr_Itm
+      SET
+        /* %SetFK(Ordr_Itm,NULL) */
+        Ordr_Itm.Disc_Typ = NULL
+      WHERE
+        NOT EXISTS (
+          SELECT * FROM Disc
+            WHERE
+              /* %JoinFKPK(:%New,Disc," = "," AND") */
+              :new.Disc_Typ = Disc.Disc_Typ
+        ) 
+        /* %JoinPKPK(Ordr_Itm,:%New," = "," AND") */
+         and Ordr_Itm.Ordr_Nbr = :new.Ordr_Nbr AND
+        Ordr_Itm.Itm_Seq_Nbr = :new.Itm_Seq_Nbr;
+
+    /* erwin Builtin Trigger */
+    /* Purchase_Ordr  Ordr_Itm on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="Purchase_Ordr"
+    CHILD_OWNER="", CHILD_TABLE="Ordr_Itm"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Purchase_Ordr_Ordr_Itm", FK_COLUMNS="Ordr_Nbr" */
+    SELECT count(*) INTO NUMROWS
+      FROM Purchase_Ordr
+      WHERE
+        /* %JoinFKPK(:%New,Purchase_Ordr," = "," AND") */
+        :new.Ordr_Nbr = Purchase_Ordr.Ordr_Nbr;
+    IF (
+      /* %NotnullFK(:%New," IS NOT NULL AND") */
+      
+      NUMROWS = 0
+    )
+    THEN
+      raise_application_error(
+        -20002,
+        'Cannot insert Ordr_Itm because Purchase_Ordr does not exist.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_Ordr_Itm AFTER UPDATE ON Ordr_Itm for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on Ordr_Itm 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* erwin Builtin Trigger */
+  /* Ordr_Itm  Ordr_Ship on parent update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00069142", PARENT_OWNER="", PARENT_TABLE="Ordr_Itm"
+    CHILD_OWNER="", CHILD_TABLE="Ordr_Ship"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Ordr_Itm_Ordr_Ship", FK_COLUMNS="Ordr_Nbr""Itm_Seq_Nbr" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.Ordr_Nbr <> :new.Ordr_Nbr OR 
+    :old.Itm_Seq_Nbr <> :new.Itm_Seq_Nbr
+  THEN
+    SELECT count(*) INTO NUMROWS
+      FROM Ordr_Ship
+      WHERE
+        /*  %JoinFKPK(Ordr_Ship,:%Old," = "," AND") */
+        Ordr_Ship.Ordr_Nbr = :old.Ordr_Nbr AND
+        Ordr_Ship.Itm_Seq_Nbr = :old.Itm_Seq_Nbr;
+    IF (NUMROWS > 0)
+    THEN 
+      raise_application_error(
+        -20005,
+        'Cannot update Ordr_Itm because Ordr_Ship exists.'
+      );
+    END IF;
+  END IF;
+
+  /* Ordr_Itm  Book_Retrun on parent update set null */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="Ordr_Itm"
+    CHILD_OWNER="", CHILD_TABLE="Book_Retrun"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Ordr_Itm_Book_Retrun", FK_COLUMNS="Ordr_Nbr""Itm_Seq_Nbr" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.Ordr_Nbr <> :new.Ordr_Nbr OR 
+    :old.Itm_Seq_Nbr <> :new.Itm_Seq_Nbr
+  THEN
+    UPDATE Book_Retrun
+      SET
+        /* %SetFK(Book_Retrun,NULL) */
+        Book_Retrun.Ordr_Nbr = NULL,
+        Book_Retrun.Itm_Seq_Nbr = NULL
+      WHERE
+        /* %JoinFKPK(Book_Retrun,:%Old," = ",",") */
+        Book_Retrun.Ordr_Nbr = :old.Ordr_Nbr AND
+        Book_Retrun.Itm_Seq_Nbr = :old.Itm_Seq_Nbr;
+  END IF;
+
+  /* Ordr_Itm  Rylty_Hist on parent update set null */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="Ordr_Itm"
+    CHILD_OWNER="", CHILD_TABLE="Rylty_Hist"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Ordr_Itm_Rylty_Hist", FK_COLUMNS="Ordr_Nbr""Itm_Seq_Nbr" */
+  IF
+    /* %JoinPKPK(:%Old,:%New," <> "," OR ") */
+    :old.Ordr_Nbr <> :new.Ordr_Nbr OR 
+    :old.Itm_Seq_Nbr <> :new.Itm_Seq_Nbr
+  THEN
+    UPDATE Rylty_Hist
+      SET
+        /* %SetFK(Rylty_Hist,NULL) */
+        Rylty_Hist.Ordr_Nbr = NULL,
+        Rylty_Hist.Itm_Seq_Nbr = NULL
+      WHERE
+        /* %JoinFKPK(Rylty_Hist,:%Old," = ",",") */
+        Rylty_Hist.Ordr_Nbr = :old.Ordr_Nbr AND
+        Rylty_Hist.Itm_Seq_Nbr = :old.Itm_Seq_Nbr;
+  END IF;
+
+  /* erwin Builtin Trigger */
+  /* Book  Ordr_Itm on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="Book"
+    CHILD_OWNER="", CHILD_TABLE="Ordr_Itm"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Book_Ordr_Itm", FK_COLUMNS="Book_Id" */
+  SELECT count(*) INTO NUMROWS
+    FROM Book
+    WHERE
+      /* %JoinFKPK(:%New,Book," = "," AND") */
+      :new.Book_Id = Book.Book_Id;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update Ordr_Itm because Book does not exist.'
+    );
+  END IF;
+
+  /* erwin Builtin Trigger */
+  /* Disc  Ordr_Itm on child update no action */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="Disc"
+    CHILD_OWNER="", CHILD_TABLE="Ordr_Itm"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Disc_Ordr_Itm", FK_COLUMNS="Disc_Typ" */
+  SELECT count(*) INTO NUMROWS
+    FROM Disc
+    WHERE
+      /* %JoinFKPK(:%New,Disc," = "," AND") */
+      :new.Disc_Typ = Disc.Disc_Typ;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    :new.Disc_Typ IS NOT NULL AND
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update Ordr_Itm because Disc does not exist.'
+    );
+  END IF;
+
+  /* erwin Builtin Trigger */
+  /* Purchase_Ordr  Ordr_Itm on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="Purchase_Ordr"
+    CHILD_OWNER="", CHILD_TABLE="Ordr_Itm"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Purchase_Ordr_Ordr_Itm", FK_COLUMNS="Ordr_Nbr" */
+  SELECT count(*) INTO NUMROWS
+    FROM Purchase_Ordr
+    WHERE
+      /* %JoinFKPK(:%New,Purchase_Ordr," = "," AND") */
+      :new.Ordr_Nbr = Purchase_Ordr.Ordr_Nbr;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update Ordr_Itm because Purchase_Ordr does not exist.'
+    );
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tI_Rylty_Pmt BEFORE INSERT ON Rylty_Pmt for each row
+-- erwin Builtin Trigger
+-- INSERT trigger on Rylty_Pmt 
+DECLARE NUMROWS INTEGER;
+BEGIN
+    /* erwin Builtin Trigger */
+    /* BookAuth  Rylty_Pmt on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="000201b1", PARENT_OWNER="", PARENT_TABLE="BookAuth"
+    CHILD_OWNER="", CHILD_TABLE="Rylty_Pmt"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_BookAuth_Rylty_Pmt", FK_COLUMNS="Auth_Id""Book_Id" */
+    SELECT count(*) INTO NUMROWS
+      FROM BookAuth
+      WHERE
+        /* %JoinFKPK(:%New,BookAuth," = "," AND") */
+        :new.Auth_Id = BookAuth.Auth_Id AND
+        :new.Book_Id = BookAuth.Book_Id;
+    IF (
+      /* %NotnullFK(:%New," IS NOT NULL AND") */
+      
+      NUMROWS = 0
+    )
+    THEN
+      raise_application_error(
+        -20002,
+        'Cannot insert Rylty_Pmt because BookAuth does not exist.'
+      );
+    END IF;
+
+    /* erwin Builtin Trigger */
+    /* Rylty  Rylty_Pmt on child insert restrict */
+    /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="Rylty"
+    CHILD_OWNER="", CHILD_TABLE="Rylty_Pmt"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Rylty_Rylty_Pmt", FK_COLUMNS="Rylty_Id" */
+    SELECT count(*) INTO NUMROWS
+      FROM Rylty
+      WHERE
+        /* %JoinFKPK(:%New,Rylty," = "," AND") */
+        :new.Rylty_Id = Rylty.Rylty_Id;
+    IF (
+      /* %NotnullFK(:%New," IS NOT NULL AND") */
+      
+      NUMROWS = 0
+    )
+    THEN
+      raise_application_error(
+        -20002,
+        'Cannot insert Rylty_Pmt because Rylty does not exist.'
+      );
+    END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+
+CREATE  TRIGGER tU_Rylty_Pmt AFTER UPDATE ON Rylty_Pmt for each row
+-- erwin Builtin Trigger
+-- UPDATE trigger on Rylty_Pmt 
+DECLARE NUMROWS INTEGER;
+BEGIN
+  /* erwin Builtin Trigger */
+  /* BookAuth  Rylty_Pmt on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="000204d9", PARENT_OWNER="", PARENT_TABLE="BookAuth"
+    CHILD_OWNER="", CHILD_TABLE="Rylty_Pmt"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_BookAuth_Rylty_Pmt", FK_COLUMNS="Auth_Id""Book_Id" */
+  SELECT count(*) INTO NUMROWS
+    FROM BookAuth
+    WHERE
+      /* %JoinFKPK(:%New,BookAuth," = "," AND") */
+      :new.Auth_Id = BookAuth.Auth_Id AND
+      :new.Book_Id = BookAuth.Book_Id;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update Rylty_Pmt because BookAuth does not exist.'
+    );
+  END IF;
+
+  /* erwin Builtin Trigger */
+  /* Rylty  Rylty_Pmt on child update restrict */
+  /* ERWIN_RELATION:CHECKSUM="00000000", PARENT_OWNER="", PARENT_TABLE="Rylty"
+    CHILD_OWNER="", CHILD_TABLE="Rylty_Pmt"
+    P2C_VERB_PHRASE="", C2P_VERB_PHRASE="", 
+    FK_CONSTRAINT="FK_Rylty_Rylty_Pmt", FK_COLUMNS="Rylty_Id" */
+  SELECT count(*) INTO NUMROWS
+    FROM Rylty
+    WHERE
+      /* %JoinFKPK(:%New,Rylty," = "," AND") */
+      :new.Rylty_Id = Rylty.Rylty_Id;
+  IF (
+    /* %NotnullFK(:%New," IS NOT NULL AND") */
+    
+    NUMROWS = 0
+  )
+  THEN
+    raise_application_error(
+      -20007,
+      'Cannot update Rylty_Pmt because Rylty does not exist.'
+    );
+  END IF;
+
+
+-- erwin Builtin Trigger
+END;
+/
+
+
+
+DROP TABLE Book_YTD_SlsABAA3706007 CASCADE CONSTRAINTS PURGE;
+
+DROP TABLE BookAuthABAA3706004 CASCADE CONSTRAINTS PURGE;
+
+DROP TABLE Ordr_ItmABAA3706005 CASCADE CONSTRAINTS PURGE;
+
+DROP TABLE Rylty_PmtABAA3706006 CASCADE CONSTRAINTS PURGE;
