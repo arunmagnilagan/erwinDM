@@ -1,0 +1,1767 @@
+version : 1
+models:
+  - name: Book_Retrun
+    description: This information enables us to track which books are returned based
+        on a line item for a purchase order.
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Book_Rtrn_Id
+        description: A unique identifier for all purchase order line items that have
+            been returned after shipment.
+        data_type: CHAR
+        tests:
+          - unique
+          - not_null
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Ordr_Nbr
+        description: The unique identifier for a purchase order.
+        data_type: INTEGER
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Itm_Seq_Nbr
+        description: A unique sequence number for all line items placed in a purchase
+            order.
+        data_type: INTEGER
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Book_Rtrn_Dt
+        description: The date in which a book specified by the line item on a purchase
+            order is returned.
+        data_type: DATE
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+  - name: Publshr_Logo
+    description: 'The signature logo for the company that hold the publishing rights
+        for a book. '
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Publshr_Id
+        description: A unique identifier for all publishing companies we do business
+            with.
+        data_type: CHAR
+        tests:
+          - unique
+          - not_null
+          - relationships:
+                to: ref('Publshr')
+                field: Publshr_Id
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Publshr_Logo
+        description: The logo image for the book publishing company.
+        data_type: character
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Publshr_Publc_Rel_Inf
+        description: Information about the public relations our company has with a
+            book publishing company.
+        data_type: VARCHAR2
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+  - name: Publshr
+    description: 'The contact information for the publishing company that has the
+        publishing rights to a book. '
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Publshr_Id
+        description: The unique identifier for the list of all Publishers our company
+            does business with.
+        data_type: CHAR
+        tests:
+          - unique
+          - not_null
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Publshr_Nam
+        description: The name of the book publishing company.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Publshr_Addr
+        description: The current mailing street address for a book publisher.
+        data_type: VARCHAR2
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Publshr_Cty
+        description: The current mailing city for a book publisher.
+        data_type: VARCHAR2
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Publshr_Zip_Cd
+        description: The current mailing zip code for a book publisher.
+        data_type: VARCHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Publshr_St
+        description: The current mailing state name for a book publisher.
+        data_type: VARCHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+  - name: Rylty
+    description: Information about the royalty agreement the company has established
+        with the author of a book.
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Rylty_Id
+        description: The unique identifier for the list of royalty agreements we have
+            in our company.
+        data_type: CHAR
+        tests:
+          - unique
+          - not_null
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Lo_Rnge
+        description: The negotiated high amount to pay an author royalty fees for
+            a book sold by our company.
+        data_type: INTEGER
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Hi_Rnge
+        description: The negotiated high amount to pay an author royalty fees for
+            a book sold by our company.
+        data_type: INTEGER
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Rylty_Amt
+        description: The amount paid for royalties on a book.
+        data_type: NUMBER
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+  - name: Disc
+    description: Discount information that is offered to customers either through
+        incentives or promotions offered by the company when a purchase order is established.
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Disc_Typ
+        description: The type of discount our company is providing a customer.
+        data_type: VARCHAR2
+        tests:
+          - unique
+          - not_null
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Lo_Qty
+        description: The low end of the count of books placed on a purchase order.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Hi_Qty
+        description: The high end of the count of books placed in a purchase order.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Disc_Pct
+        description: The percentage of discount allowed based on the low and high
+            quantity book volume placed on a purchase order.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+  - name: Stor_Nam
+    description: The name of the company store name that has books available for sale.
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Stor_Id
+        description: A unique identifier for each store location in our business.
+        data_type: CHAR
+        tests:
+          - unique
+          - not_null
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Stor_Nam
+        description: The formal name for the store.
+        data_type: VARCHAR2
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Stor_Addr
+        description: The street address location for one of our stores.
+        data_type: VARCHAR2
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Stor_Cty
+        description: The city where one of our stores is located.
+        data_type: VARCHAR2
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Stor_Zip_Cd
+        description: The mailing zip code for a store.
+        data_type: VARCHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Rgn_Id
+        description: A unique identifier for all sections of the U.S. where we do
+            business.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Stor_St
+        description: The state where the store is located.
+        data_type: VARCHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+  - name: Emp
+    description: The employee name and pertinent information about the employee that
+        is used to support this publication application. This information is copied
+        from the company's HR system.
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Emp_Id
+        description: A unique identifier for all employees in our company as recorded
+            in HR.
+        data_type: CHAR
+        tests:
+          - unique
+          - not_null
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Emp_Frst_Nam
+        description: The Employee first name as recorded in HR.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Emp_Mid_Init
+        description: The middle initial for the employee as recorded in HR.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Emp_Lst_Nam
+        description: The last name for the employee as recorded in HR.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Job_Id
+        description: A unique identifier for our company job positions.
+        data_type: CHAR
+        tests:
+          - not_null
+          - relationships:
+                to: ref('Job')
+                field: Job_Id
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Curr_Emp_Job_Ttle
+        description: The Employee current job title as defined by HR.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Emp_Hire_Dt
+        description: The Employee hire date as recorded in HR.
+        data_type: DATE
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+  - name: Job
+    description: 'The job position title for an employee in the company. '
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Job_Id
+        description: A unique identifier for our company job positions.
+        data_type: CHAR
+        tests:
+          - unique
+          - not_null
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Job_Desc
+        description: The Human Resources description for a Job in our company.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Min_LvL
+        description: The minimum pay scale for a Job in our company as defined by
+            HR.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Max_LvL
+        description: The maximum pay scale for a Job in our company as defined by
+            HR.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+  - name: Reporting_Structure
+    description: This information further clarifies the kinds of approaches in which
+        our company can accept payment for the purchase of books.
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Mngr
+        description: Identifies the manager an employee reports to.
+        data_type: CHAR
+        tests:
+          - unique
+          - not_null
+          - relationships:
+                to: ref('Emp')
+                field: Emp_Id
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Rpt_To
+        description: Identifies the employee who reports to a manager.
+        data_type: CHAR
+        tests:
+          - unique
+          - not_null
+          - relationships:
+                to: ref('Emp')
+                field: Emp_Id
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Strt_Dt
+        description: The date in which a reporting relationship begins between a manager
+            and an employee.
+        data_type: DATE
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: End_Dt
+        description: The date in which a reporting relationship has ended between
+            a manager and an employee.
+        data_type: DATE
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+  - name: Cust
+    description: ' A person or company that has either purchased a Quill PRODUCT or
+        has called us for technical support.'
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Cust_Id
+        description: A unique identifier for all customers doing business with us.
+        data_type: CHAR
+        tests:
+          - unique
+          - not_null
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Cust_Frst_Nam
+        description: The customer first name.
+        data_type: VARCHAR2
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Cust_Lst_Nam
+        description: The customer last name.
+        data_type: VARCHAR2
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Cust_Cmpy_Nam
+        description: The company name mailing address for the customer.
+        data_type: VARCHAR2
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Cust_Stret_Addr
+        description: The mailing street address to send information to the customer.
+        data_type: VARCHAR2
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Cust_Cty
+        description: The city for the current mailing address of the customer.
+        data_type: VARCHAR2
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Cust_Zip_Cd
+        description: The mailing zip code for sending information to the customer.
+        data_type: VARCHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Cust_Phn_Area_Cd
+        description: The contact phone area code to enable our company to call the
+            customer.
+        data_type: INTEGER
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Cust_Phn_Nbr
+        description: The contact phone number for our company to call the customer.
+        data_type: INTEGER
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Cust_Fax_Area_Cd
+        description: The fax area code for sending fax information to the customer.
+        data_type: INTEGER
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Cust_Fax_Nbr
+        description: The fax number for sending information to the customer.
+        data_type: INTEGER
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Cust_St
+        description: The mailing state name for sending information to the customer.
+        data_type: VARCHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+  - name: BookAuth
+    description: This is the Author or Authors name for any book available for purchase.
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Auth_Id
+        description: A unique identifier for the author of a book.
+        data_type: CHAR
+        tests:
+          - unique
+          - not_null
+          - relationships:
+                to: ref('Auth')
+                field: Auth_Id
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Book_Id
+        description: A unique identifier for all books we have available for sale
+            in our inventory.
+        data_type: CHAR
+        tests:
+          - unique
+          - not_null
+          - relationships:
+                to: ref('Book')
+                field: Book_Id
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+  - name: Purchase_Ordr
+    description: The general document that identifies information about a customer
+        that has book item(s) placed in an order.
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Ordr_Nbr
+        description: The unique identifier for a purchase order.
+        data_type: INTEGER
+        tests:
+          - unique
+          - not_null
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Stor_Id
+        description: A unique identifier for each store location in our business.
+        data_type: CHAR
+        tests:
+          - not_null
+          - relationships:
+                to: ref('Stor_Nam')
+                field: Stor_Id
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Ordr_Dt
+        description: The date in which a purchase order is received and accepted by
+            our company.
+        data_type: DATE
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Pmt_Trm
+        description: A description of the payment terms negotiated with a customer
+            for a purchase order.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Cust_Id
+        description: A unique identifier for all customer purchase orders placed with
+            our company.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+  - name: Auth
+    description: Contact information about the author of a book. If more than one
+        author is involved, then the primary contact author is recorded here.
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Auth_Id
+        description: A unique identifier for the author of a book.
+        data_type: CHAR
+        tests:
+          - unique
+          - not_null
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Auth_Lst_Nam
+        description: The last name for the Author of a book.
+        data_type: VARCHAR2
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Auth_Frst_Nam
+        description: The first name for the author of a book.
+        data_type: VARCHAR2
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Auth_Phn_Nbr
+        description: The current phone number for the author of a book.
+        data_type: INTEGER
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Auth_Addr
+        description: The current street address for the author of a book.
+        data_type: VARCHAR2
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Auth_Cty
+        description: The current city where the author of a book resides.
+        data_type: VARCHAR2
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Auth_St
+        description: The current state where the author of a book resides.
+        data_type: VARCHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Auth_Zip_Cd
+        description: The current mailing zip code where the author of a book is located.
+        data_type: VARCHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Cntrct
+        description: 'The link to a signed contract authorizing our company to sell
+            a book in behalf of the author. '
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+  - name: Book
+    description: The title for a book our company has the rights to sell.
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Book_Id
+        description: A unique identifier for all books we have available for sale
+            in our inventory.
+        data_type: CHAR
+        tests:
+          - unique
+          - not_null
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Book_Nam
+        description: The title of a book.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Book_Typ
+        description: The introductory information provide by the publisher providing
+            a description of the book within the context of the book category.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Publshr_Id
+        description: The unique identifier for the list of all Publishers our company
+            does business with.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: MRSP_Prc
+        description: The full retail price for a book.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Advnc
+        description: The amount that is advanced to a book's author as part of the
+            publishing agreement.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Rylty_Trm
+        description: The length in years that the royalty agreement is valid.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Book_Note
+        description: The synopsis of the book as provided by the publisher.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Publctn_Dt
+        description: the latest publication release for a book by the publisher.
+        data_type: DATE
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+  - name: Ordr_Itm
+    description: Specific line item entries for a purchase order form a customer.
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Ordr_Nbr
+        description: The unique identifier for a purchase order.
+        data_type: INTEGER
+        tests:
+          - unique
+          - not_null
+          - relationships:
+                to: ref('Purchase_Ordr')
+                field: Ordr_Nbr
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Itm_Seq_Nbr
+        description: A unique sequence number for all line items placed in a purchase
+            order.
+        data_type: INTEGER
+        tests:
+          - unique
+          - not_null
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Book_Id
+        description: A unique identifier for all books we have available for sale
+            in our inventory.
+        data_type: CHAR
+        tests:
+          - not_null
+          - relationships:
+                to: ref('Book')
+                field: Book_Id
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Ordr_Qty
+        description: The number of copies of a book ordered on a line item for a purchase
+            order.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Disc_Typ
+        description: The type of discount our company is providing a customer.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Ordr_Disc_Amt
+        description: The discount credited on a purchase order for a book.
+        data_type: DECIMAL
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Ordr_Prc
+        description: The total price charge for the book(s) ordered in a line item
+            on a purchase order.
+        data_type: DECIMAL
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+  - name: Rylty_Pmt
+    description: The royalty agreement our company has established with the book's
+        author in terms of the royalty agreement contract we negotiated with the author.
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Auth_Id
+        description: A unique identifier for the author of a book.
+        data_type: CHAR
+        tests:
+          - unique
+          - not_null
+          - relationships:
+                to: ref('BookAuth')
+                field: Auth_Id
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Book_Id
+        description: A unique identifier for all books we have available for sale
+            in our inventory.
+        data_type: CHAR
+        tests:
+          - unique
+          - not_null
+          - relationships:
+                to: ref('BookAuth')
+                field: Book_Id
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Rylty_Id
+        description: The unique identifier for the list of royalty agreements we have
+            in our company.
+        data_type: CHAR
+        tests:
+          - unique
+          - not_null
+          - relationships:
+                to: ref('Rylty')
+                field: Rylty_Id
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Pmt_Dt
+        description: The date our company paid an author the royalty fee for a book.
+        data_type: DATE
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Pmt_Amt
+        description: The amount of royalty fee our company paid an author for a book
+            we sold.
+        data_type: DECIMAL
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+  - name: Book_YTD_Sls
+    description: This tracks the YTD sales for each book we offer our customers.
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Book_Id
+        description: A unique identifier for all books we have available for sale
+            in our inventory.
+        data_type: CHAR
+        tests:
+          - unique
+          - not_null
+          - relationships:
+                to: ref('Book')
+                field: Book_Id
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Yr_To_Dt_Sls_Amt
+        description: The running total for year to date sales for a specific book.
+            This excludes the sale value if the book is returned.
+        data_type: DECIMAL
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Yr_To_Dt_Sls_Dt
+        description: The latest date in which a book was purchased by a customer and
+            was not returned.
+        data_type: DATE
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+  - name: Rylty_Hist
+    description: 'This tracks the history of royalty payments made by our company
+        to an author for the books we sold.  '
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Rylty_Hist_Id
+        description: A unique identifier for all Royalty contracts with the author
+            of a book.
+        data_type: CHAR
+        tests:
+          - unique
+          - not_null
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Ordr_Nbr
+        description: The unique identifier for a purchase order.
+        data_type: INTEGER
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Itm_Seq_Nbr
+        description: A unique sequence number for all line items placed in a purchase
+            order.
+        data_type: INTEGER
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Rylty_Pmt_Dt
+        description: The date our company paid an author the royalty fee for a book.
+        data_type: DATE
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Rylty_Pmt_Amt
+        description: The historical record of the amount of royalty fee our company
+            paid an author for a book we sold.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Rylty_Payee
+        description: The author who reeived a roalyty payment.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+  - name: Crd_Card
+    description: One of three ways our customers can pay for the books they purchase.
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Pmt_Nbr
+        description: A unique identifier for all payments received from our customers.
+        data_type: INTEGER
+        tests:
+          - unique
+          - not_null
+          - relationships:
+                to: ref('Pmt')
+                field: Pmt_Nbr
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Card_Nbr
+        description: The credit card number used to make a payment.
+        data_type: INTEGER
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Card_Exp_Dt
+        description: The expiration date as identified on a credit card.
+        data_type: DATE
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Crd_Card_Typ
+        description: The type of credit card used to make a payment.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Card_Vndr_Nam
+        description: The credit card company name for the credit card used to make
+            a payment.
+        data_type: VARCHAR2
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Crd_Card_Amt
+        description: The amount that is charged to the credit card.
+        data_type: NUMBER
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+  - name: Mony_Ordr
+    description: One of three ways our customers can pay for the books they purchase.
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Pmt_Nbr
+        description: A unique identifier for all payments received from our customers.
+        data_type: INTEGER
+        tests:
+          - unique
+          - not_null
+          - relationships:
+                to: ref('Pmt')
+                field: Pmt_Nbr
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Mony_Ordr_Nbr
+        description: The money order number.
+        data_type: INTEGER
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Mony_Ordr_Amt
+        description: The amount as stated on the money order.
+        data_type: NUMBER
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+  - name: Rgn
+    description: The section of the USA where our company organizes sales tracking.
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Rgn_Id
+        description: A unique identifier for all sections of the U.S. where we do
+            business.
+        data_type: CHAR
+        tests:
+          - unique
+          - not_null
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Rgn_Area
+        description: A descriptive name for a region.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Rgn_Desc
+        description: Identifies which states comprise the structure of a region in
+            our company.
+        data_type: VARCHAR2
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+  - name: Personal_Chk
+    description: One of three ways our customers can pay for the books they purchase.
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Pmt_Nbr
+        description: A unique identifier for all payments received from our customers.
+        data_type: INTEGER
+        tests:
+          - unique
+          - not_null
+          - relationships:
+                to: ref('Pmt')
+                field: Pmt_Nbr
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Chk_Nbr
+        description: The check number on the checking account.
+        data_type: INTEGER
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Chk_Acct_Nbr
+        description: The checking account routing number.
+        data_type: INTEGER
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Chk_Bnk_Nbr
+        description: The bank number for the check.
+        data_type: INTEGER
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Chk_Dvr_Lic_Nbr
+        description: The driver's license number for the person presenting the check.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Chk_Amt
+        description: The amount on the check.
+        data_type: NUMBER
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+  - name: Pmt
+    description: |
+        Payment for a purchase order.
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Pmt_Nbr
+        description: A unique identifier for all payments received from our customers.
+        data_type: INTEGER
+        tests:
+          - unique
+          - not_null
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Pmt_Typ
+        description: |
+            The method of payment a customer is using to pay for our goods and/or services. This can be a credit card, a money order or a personnal check.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Pmt_Dt
+        description: The date a payment is made.
+        data_type: DATE
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Pmt_Amt
+        description: 'The amount a customer pays to credit their account for purchases
+            made. '
+        data_type: DECIMAL
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+  - name: Ordr_Ship
+    description: The actual date in which a specific line item on a purchase order
+        is shipped.
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Ordr_Ship_Id
+        description: A unique identifier for all line item order shipments.
+        data_type: CHAR
+        tests:
+          - unique
+          - not_null
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Ordr_Nbr
+        description: The unique identifier for a purchase order.
+        data_type: INTEGER
+        tests:
+          - unique
+          - not_null
+          - relationships:
+                to: ref('Ordr_Itm')
+                field: Ordr_Nbr
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Itm_Seq_Nbr
+        description: A unique sequence number for all line items placed in a purchase
+            order.
+        data_type: INTEGER
+        tests:
+          - unique
+          - not_null
+          - relationships:
+                to: ref('Ordr_Itm')
+                field: Itm_Seq_Nbr
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Blng_Addr
+        description: Identifies where to send the billing information when an order
+            is shipped.
+        data_type: VARCHAR2
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Ship_Addr
+        description: The ship-to mailing address our company uses to send line item
+            books to a customer.
+        data_type: VARCHAR2
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Ship_Stat
+        description: The shipping status for a line item on a purchase order.
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Shed_Ship_Dt
+        description: The scheduled shipping date our company establishes for a line
+            item on a purchase order.
+        data_type: DATE
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+  - name: Bk_Ordr
+    description: This provides a means to track order line items that need to be back
+        ordered.
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Ordr_Ship_Id
+        description: A unique identifier for all line item order shipments.
+        data_type: CHAR
+        tests:
+          - unique
+          - not_null
+          - relationships:
+                to: ref('Ordr_Ship')
+                field: Ordr_Ship_Id
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Ordr_Nbr
+        description: The unique identifier for a purchase order.
+        data_type: INTEGER
+        tests:
+          - unique
+          - not_null
+          - relationships:
+                to: ref('Ordr_Ship')
+                field: Ordr_Nbr
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Itm_Seq_Nbr
+        description: A unique sequence number for all line items placed in a purchase
+            order.
+        data_type: INTEGER
+        tests:
+          - unique
+          - not_null
+          - relationships:
+                to: ref('Ordr_Ship')
+                field: Itm_Seq_Nbr
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Reschd_Ship_Dt
+        description: The scheduled shipment date for a purchase order line item that
+            was back ordered.
+        data_type: DATE
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+  - name: Crd_Chk
+    description: One of three ways our customers can pay for the books they purchase.
+    meta:
+        table_metadata:
+            Data Steward: The person in data administration rersponsible for this
+                entity.
+            StdAbbr: The corporate standard abbreviation used for table and column
+                naming.
+    columns:
+      - name: Crd_Chk_Evnt
+        description: A unique identifier for all credit checking we do to verify our
+            customer credit rating.
+        data_type: CHAR
+        tests:
+          - unique
+          - not_null
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Pmt_Nbr
+        description: A unique identifier for all payments received from our customers.
+        data_type: INTEGER
+        tests:
+          - not_null
+          - relationships:
+                to: ref('Crd_Card')
+                field: Pmt_Nbr
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Crd_Chk_Dt
+        description: The date in which a credit card is verified against a credit
+            bureau.
+        data_type: DATE
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+      - name: Crd_Stat
+        description: The credit status reported back from the credit bureau,
+        data_type: CHAR
+        meta:
+            column_metadata:
+                Definition Source: Technical Support The individual, organization,
+                    document, etc. from which info on this attribute was obtained.
+                CreateDate: 10/11/1700 The date on which this attribute was added
+                    to this entity.
+relationships:
+  - name: FK_Book_Ttleview
+  - name: FK_Auth_Ttleview
+  - name: FK_Ordr_Itm_Ordr_View
+  - name: FK_Book_Ordr_View
+  - name: FK_Stor_Nam_Purchase_Ordr
+  - name: FK_Crd_Card_Crd_Chk
+  - name: FK_Job_Emp
+  - name: FK_Ordr_Itm_Rylty_Hist
+  - name: FK_Employee_Manager
+  - name: FK_Publshr_Book
+  - name: FK_Employee_ReportTo
+  - name: FK_Purchase_Ordr_Ordr_Itm
+  - name: FK_Disc_Ordr_Itm
+  - name: FK_Book_Ordr_Itm
+  - name: FK_Rylty_Rylty_Pmt
+  - name: FK_BookAuth_Rylty_Pmt
+  - name: FK_Book_Book_YTD_Sls
+  - name: FK_Ordr_Itm_Ordr_Ship
+  - name: FK_Ordr_Itm_Book_Retrun
+  - name: FK_Ordr_Ship_Bk_Ordr
+  - name: FK_Rgn_Stor_Nam
+  - name: FK_Cust_Purchase_Ordr
+  - name: FK_Pmt_Crd_Card
+  - name: FK_Pmt_Mony_Ordr
+  - name: FK_Pmt_Personal_Chk
+  - name: FK_Auth_BookAuth
+  - name: FK_Book_BookAuth
+  - name: FK_Publshr_Publshr_Logo
+  - name: FK_Publshr_Publshr_View
+  - name: FK_Book_Publshr_View
+  - name: FK_Book_YTD_Sls_Publshr_View
+  - name: FK_BookAuth_Ttleview
+  - name: FK_Purchase_Ordr_Ordr_View
+  - name: FK_Stor_Nam_Ordr_View
+  - name: FK_Emp_Publshr_View
+  - name: FK_Mony_Ordr_Pmt_View
+  - name: FK_Pmt_Pmt_View
+  - name: FK_Crd_Card_Pmt_View
+  - name: FK_Personal_Chk_Pmt_View
+  - name: FK_Cust_Pmt_View
+  - name: FK_Purchase_Ordr_Pmt_View
